@@ -164,13 +164,18 @@ const Analysis: React.FC = () => {
                       src={selectedImage}
                     />
                   ) : (
-                    <div className="flex flex-col items-center gap-6 p-12 text-center text-slate-400 group-hover:text-blue-600 transition-colors">
-                      <div className="p-8 rounded-[2.5rem] bg-white shadow-xl shadow-slate-200 group-hover:shadow-blue-600/10 group-hover:scale-105 transition-all duration-500">
-                        {isUploading ? <Loader2 className="w-12 h-12 animate-spin" /> : <Plus className="w-12 h-12" />}
+                    <div className="flex flex-col items-center gap-5 p-8 text-center text-slate-400 group-hover:text-blue-600 transition-colors">
+                      <div className="p-6 rounded-[2rem] bg-white shadow-xl shadow-slate-200 group-hover:shadow-blue-600/15 group-hover:scale-110 transition-all duration-300 border border-slate-100">
+                        {isUploading ? <Loader2 className="w-10 h-10 animate-spin text-blue-600" /> : <Upload className="w-10 h-10 text-blue-600" />}
                       </div>
                       <div>
-                        <h4 className="font-bold text-xl text-slate-800 mb-2">Scan Your Report</h4>
-                        <p className="text-sm px-4">Upload an image of your blood test, prescription, or X-ray for instant analysis.</p>
+                        <h4 className="font-black text-lg text-slate-800 mb-1.5">Upload Medical Report</h4>
+                        <p className="text-xs text-slate-500 font-medium px-2 mb-3">Click to browse or drop your document here</p>
+                        <div className="flex flex-wrap justify-center gap-1.5">
+                          <span className="px-2.5 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">JPG</span>
+                          <span className="px-2.5 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">PNG</span>
+                          <span className="px-2.5 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">PDF</span>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -196,25 +201,64 @@ const Analysis: React.FC = () => {
           {/* Analysis View Side */}
           <div className="lg:col-span-7 xl:col-span-8 space-y-6">
             {!reportData && !isUploading ? (
-              <div className="bg-white rounded-[2.5rem] p-12 md:p-20 flex flex-col items-center text-center space-y-8 border-2 border-dashed border-slate-200 shadow-sm animate-in slide-in-from-right-10 duration-700">
-                <div className="p-10 rounded-full bg-slate-50 text-slate-300 relative">
-                  <Activity className="w-20 h-20" />
-                  <div className="absolute top-0 right-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white animate-pulse">
-                    <Plus className="w-5 h-5" />
+              <div className="bg-white rounded-[2.5rem] p-8 md:p-12 space-y-8 border border-slate-200/80 shadow-sm animate-in slide-in-from-right-10 duration-700">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      <Stethoscope className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">Clinical AI Intelligence</span>
+                      <h3 className="text-2xl font-black text-slate-800 tracking-tight">How Report Analysis Works</h3>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="w-fit bg-emerald-50 text-emerald-600 border-emerald-200 font-bold px-3 py-1">
+                    Multi-Language OCR
+                  </Badge>
+                </div>
+
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Upload a photo or PDF of any blood test, lab work, or prescription. Our multi-agent AI pipeline reads every value, compares it to clinical reference ranges, and translates the findings into simple, jargon-free advice in your regional language.
+                </p>
+
+                {/* 3 Interactive Capability Highlights */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                    <div className="w-9 h-9 rounded-xl bg-blue-100/60 flex items-center justify-center text-blue-600 mb-3">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <h4 className="font-bold text-slate-800 text-sm">Smart Parameter Extraction</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                      Extracts Hemoglobin, Blood Sugar, Platelets, Lipid & Liver markers automatically.
+                    </p>
+                  </div>
+
+                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                    <div className="w-9 h-9 rounded-xl bg-amber-100/60 flex items-center justify-center text-amber-600 mb-3">
+                      <AlertCircle className="w-4 h-4" />
+                    </div>
+                    <h4 className="font-bold text-slate-800 text-sm">Abnormality Flagging</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                      Highlights HIGH, LOW, and abnormal values in clean, color-coded medical badges.
+                    </p>
+                  </div>
+
+                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                    <div className="w-9 h-9 rounded-xl bg-indigo-100/60 flex items-center justify-center text-indigo-600 mb-3">
+                      <MessageSquare className="w-4 h-4" />
+                    </div>
+                    <h4 className="font-bold text-slate-800 text-sm">Interactive Report Q&A</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                      Ask follow-up questions about your report in English, Hindi, Telugu, or Odia.
+                    </p>
                   </div>
                 </div>
-                <div className="max-w-md">
-                  <h3 className="text-2xl font-black text-slate-800 mb-4">Start Your AI Scan</h3>
-                  <p className="text-slate-500 leading-relaxed font-medium">
-                    Our AI models (Seva AI) can interpret medical reports in English, Hindi, Marathi, and other regional languages. Simply upload a photo to begin.
-                  </p>
+
+                {/* Clear Instruction Prompt */}
+                <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100 flex items-center gap-3 text-blue-800 text-xs font-semibold">
+                  <Lightbulb className="w-5 h-5 text-blue-600 shrink-0" />
+                  <span>Click <strong>"Scan Your Report"</strong> on the left or use the top button to select your document.</span>
                 </div>
-                <button 
-                  onClick={handleUploadClick}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-600/20 hover:scale-[1.02] transition-all active:scale-95"
-                >
-                  Upload My First Report
-                </button>
               </div>
             ) : reportData ? (
               <div className="space-y-6 animate-in slide-in-from-bottom-8 fade-in duration-1000">
