@@ -133,7 +133,7 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col flex-1 bg-[#F8FAFC]">
+    <div className="flex flex-col h-full bg-[#F8FAFC] overflow-hidden">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 CustomScrollbar" id="chat-messages">
         <div className="max-w-4xl mx-auto space-y-8">
@@ -234,9 +234,9 @@ const Chat: React.FC = () => {
       </div>
 
       {/* Modern Input Bar */}
-      <div className="p-4 md:p-8 bg-gradient-to-t from-white via-white to-transparent">
+      <div className="px-4 pt-3 pb-3 md:pb-3 bg-white/95 backdrop-blur-md border-t border-slate-200/60 shadow-lg shrink-0">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-2.5">
             <div className="flex gap-2 overflow-x-auto scrollbar-hide no-scrollbar flex-1 mr-4">
               {[
                 { id: "fever", key: "chat.suggest.fever" },
@@ -337,7 +337,7 @@ const Chat: React.FC = () => {
             </button>
           </div>
           
-          <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-4">
+          <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-2">
             Powered by Seva AI • Professional Guidance Required
           </p>
         </div>

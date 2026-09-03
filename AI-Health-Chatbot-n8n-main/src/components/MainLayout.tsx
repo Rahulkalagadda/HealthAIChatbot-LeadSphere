@@ -49,6 +49,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
+  const isChat = location.pathname === "/chat";
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const q = e.target.value;
@@ -350,8 +351,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         </aside>
 
         {/* Main Content Canvas */}
-        <main className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="min-h-[calc(100vh-64px)] w-full pb-44 md:pb-12">
+        <main className={`flex-1 ${isChat ? "h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] lg:h-[calc(100vh-4rem)] flex flex-col overflow-hidden" : "overflow-y-auto scroll-smooth"}`}>
+          <div className={`${isChat ? "h-full flex flex-col overflow-hidden pb-24 md:pb-0" : "min-h-[calc(100vh-64px)] w-full pb-44 md:pb-12"}`}>
             {children}
           </div>
         </main>
