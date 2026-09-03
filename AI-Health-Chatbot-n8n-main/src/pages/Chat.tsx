@@ -133,9 +133,9 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F8FAFC] overflow-hidden">
+    <div className="flex-1 flex flex-col h-full min-h-0 bg-[#F8FAFC] overflow-hidden">
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 CustomScrollbar" id="chat-messages">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 CustomScrollbar min-h-0" id="chat-messages">
         <div className="max-w-4xl mx-auto space-y-8">
           {messages.map((msg) => (
             <div key={msg.id} className={`flex gap-4 group ${msg.isUser ? "flex-row-reverse" : "items-start"}`}>
