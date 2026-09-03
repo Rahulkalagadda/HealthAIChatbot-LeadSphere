@@ -117,5 +117,11 @@ export const useVoice = (language: string = 'en-IN') => {
     window.speechSynthesis.speak(utterance);
   }, [language]);
 
-  return { isListening, transcript, setTranscript, startListening, speak };
+  const stopSpeaking = useCallback(() => {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  }, []);
+
+  return { isListening, transcript, setTranscript, startListening, speak, stopSpeaking };
 };

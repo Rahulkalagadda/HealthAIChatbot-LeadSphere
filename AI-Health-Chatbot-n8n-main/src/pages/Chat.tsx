@@ -37,9 +37,16 @@ const Chat: React.FC = () => {
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   
   // Initialize voice hook with current language
-  const { isListening, transcript, startListening, speak, setTranscript } = useVoice(
+  const { isListening, transcript, startListening, speak, stopSpeaking, setTranscript } = useVoice(
     language === 'hi' ? 'hi-IN' : language === 'or' ? 'or-IN' : 'en-IN'
   );
+
+  // Stop speaking when leaving the chat page
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+    };
+  }, [stopSpeaking]);
   
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -238,7 +245,10 @@ const Chat: React.FC = () => {
               ].map((item) => (
                 <button 
                   key={item.id}
-                  onClick={() => handleSendMessage(t(item.key))}
+                  onClick={() => {
+                    stopSpeaking();
+                    handleSendMessage(t(item.key));
+                  }}
                   className="whitespace-nowrap px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-600 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all shadow-sm active:scale-95 flex items-center gap-1.5"
                 >
                   <Sparkles className="w-3 h-3" />
@@ -248,7 +258,12 @@ const Chat: React.FC = () => {
             </div>
             
             <button 
-              onClick={() => setIsVoiceMode(!isVoiceMode)}
+              onClick={() => {
+                if (isVoiceMode) {
+                  stopSpeaking();
+                }
+                setIsVoiceMode(!isVoiceMode);
+              }}
               className={`flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border transition-all ${
                 isVoiceMode 
                   ? "bg-blue-50 border-blue-200 text-blue-600 shadow-sm" 
@@ -263,7 +278,10 @@ const Chat: React.FC = () => {
 
           <div className="flex items-end gap-3 bg-white p-2 rounded-[28px] shadow-2xl shadow-slate-200 border border-slate-200 focus-within:border-blue-500/50 transition-all group overflow-hidden">
             <button 
-              onClick={startListening}
+              onClick={() => {
+                stopSpeaking();
+                startListening();
+              }}
               className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all active:scale-90 shadow-inner ${
                 isListening 
                   ? "bg-red-50 text-red-500 animate-pulse ring-4 ring-red-50" 
@@ -277,8 +295,13 @@ const Chat: React.FC = () => {
               className="flex-1 bg-transparent border-none focus:ring-0 text-[15px] font-semibold py-3 resize-none h-12 max-h-32 text-slate-700 placeholder:text-slate-400 outline-none" 
               placeholder={isListening ? t("ui.listening") : t("ui.type.question")}
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onFocus={() => stopSpeaking()}
+              onChange={(e) => {
+                stopSpeaking();
+                setMessage(e.target.value);
+              }}
               onKeyDown={(e) => {
+                stopSpeaking();
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
                   handleSendMessage();
