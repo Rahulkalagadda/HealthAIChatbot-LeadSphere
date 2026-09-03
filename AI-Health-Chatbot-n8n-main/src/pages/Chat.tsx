@@ -37,7 +37,7 @@ const Chat: React.FC = () => {
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   
   // Initialize voice hook with current language
-  const { isListening, transcript, startListening, speak, stopSpeaking, setTranscript } = useVoice(
+  const { isListening, isTranscribing, transcript, startListening, speak, stopSpeaking, setTranscript } = useVoice(
     language === 'hi' ? 'hi-IN' : language === 'or' ? 'or-IN' : 'en-IN'
   );
 
@@ -282,18 +282,32 @@ const Chat: React.FC = () => {
                 stopSpeaking();
                 startListening();
               }}
+              disabled={isTranscribing}
               className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all active:scale-90 shadow-inner ${
                 isListening 
-                  ? "bg-red-50 text-red-500 animate-pulse ring-4 ring-red-50" 
-                  : "bg-slate-50 text-slate-400 hover:bg-blue-50 hover:text-blue-600"
+                  ? "bg-red-500 text-white animate-pulse ring-4 ring-red-100 shadow-red-200" 
+                  : isTranscribing
+                    ? "bg-blue-50 text-blue-600"
+                    : "bg-slate-50 text-slate-400 hover:bg-blue-50 hover:text-blue-600"
               }`}
+              title={isListening ? "Tap to finish speaking" : "Tap to speak (Groq Whisper AI)"}
             >
-              <Mic className={`w-5 h-5 ${isListening ? 'animate-bounce' : ''}`} />
+              {isTranscribing ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Mic className={`w-5 h-5 ${isListening ? 'animate-bounce' : ''}`} />
+              )}
             </button>
             
             <textarea 
               className="flex-1 bg-transparent border-none focus:ring-0 text-[15px] font-semibold py-3 resize-none h-12 max-h-32 text-slate-700 placeholder:text-slate-400 outline-none" 
-              placeholder={isListening ? t("ui.listening") : t("ui.type.question")}
+              placeholder={
+                isListening 
+                  ? "Listening... Tap mic when finished" 
+                  : isTranscribing 
+                    ? "Transcribing with Groq Whisper AI..." 
+                    : t("ui.type.question")
+              }
               value={message}
               onFocus={() => stopSpeaking()}
               onChange={(e) => {

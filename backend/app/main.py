@@ -2,8 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from .config.db import engine, Base, get_db
-from .routes import chat_routes, analysis_routes, scheme_routes, translation_routes, search_routes, auth_routes, profile_routes, appointment_routes
-# from .routes import voice_routes 
+from .routes import chat_routes, analysis_routes, scheme_routes, translation_routes, search_routes, auth_routes, profile_routes, appointment_routes, voice_routes
 from .services.rag_service import rag_service
 from .models.search_model import Base as SearchBase
 from .models.scheme_model import SchemeCache
@@ -80,7 +79,7 @@ app.include_router(chat_routes.router, prefix="/api", tags=["Chat"])
 app.include_router(analysis_routes.router, prefix="/api", tags=["Analysis"])
 app.include_router(scheme_routes.router, prefix="/api", tags=["Schemes"])
 app.include_router(search_routes.router, prefix="/api", tags=["Search"])
-# app.include_router(voice_routes.router, prefix="/api", tags=["Voice"])
+app.include_router(voice_routes.router, prefix="/api", tags=["Voice"])
 app.include_router(translation_routes.router, prefix="/api", tags=["Translation"])
 app.include_router(auth_routes.router, prefix="/api", tags=["Auth"])
 app.include_router(profile_routes.router, prefix="/api", tags=["Profile"])

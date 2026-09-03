@@ -264,3 +264,24 @@ export const authService = {
     }
   }
 };
+
+export const voiceService = {
+  async transcribeAudio(audioBlob: Blob, language: string = "en"): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'speech.webm');
+    formData.append('language', language);
+
+    const response = await fetch(`${API_BASE_URL}/voice/transcribe`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ detail: "Transcription failed" }));
+      throw new Error(err.detail || `Server error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.text || "";
+  }
+};
