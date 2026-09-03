@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     # Groq Config
     GROQ_API_KEY: str = ""
     AI_MODEL: str = "llama-3.1-8b-instant" 
-    VISION_MODEL: str = "meta-llama/llama-4-scout-17b-16e-instruct"
+    VISION_MODEL: str = "qwen/qwen3.8-27b"
     
     # Cloudinary Config
     CLOUDINARY_CLOUD_NAME: str = ""

@@ -175,28 +175,40 @@ class AIService:
         }
         """
         
-        try:
-            response = client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": prompt},
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": f"data:{file_type};base64,{base64_image}",
+        # Ensure an active multimodal vision model on Groq
+        model_name = settings.VISION_MODEL
+        if not model_name or "scout" in model_name.lower():
+            model_name = "qwen/qwen3.8-27b"
+
+        last_error = None
+        for try_model in [model_name, "qwen/qwen3.8-27b", "qwen/qwen3.6-27b"]:
+            try:
+                response = client.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt},
+                                {
+                                    "type": "image_url",
+                                    "image_url": {
+                                        "url": f"data:{file_type};base64,{base64_image}",
+                                    },
                                 },
-                            },
-                        ],
-                    }
-                ],
-                model=settings.VISION_MODEL,
-                response_format={"type": "json_object"}
-            )
-            return response.choices[0].message.content
-        except Exception as e:
-            return f'{{ "summary": "Error analyzing image", "detailed_explanation": "{str(e)}", "findings": "Vision model failed.", "recommendations": ["Try a clearer image", "Consult a doctor."] }}'
+                            ],
+                        }
+                    ],
+                    model=try_model,
+                    response_format={"type": "json_object"}
+                )
+                return response.choices[0].message.content
+            except Exception as e:
+                last_error = e
+                if "model_not_found" in str(e).lower() or "does not exist" in str(e).lower():
+                    continue
+                break
+        
+        return f'{{ "summary": "Error analyzing image", "detailed_explanation": "{str(last_error)}", "findings": "Vision model failed.", "recommendations": ["Try a clearer image", "Consult a doctor."] }}'
 
     @staticmethod
     async def chat_about_medical_report(question: str, report_context: str):
