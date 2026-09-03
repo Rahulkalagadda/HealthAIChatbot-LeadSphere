@@ -94,6 +94,35 @@ async def report_analysis_endpoint(
         analysis_data["summary_full"] = f"{summary}\n\n{detailed}"
     else:
         analysis_data["summary_full"] = summary
+
+    # Persist report to Supabase DB and Qdrant Cloud Knowledge Base
+    import uuid
+    report_id = str(uuid.uuid4())
+    try:
+        if userId and userId != "guest":
+            new_report = Report(
+                id=report_id,
+                user_id=userId,
+                file_url=file_url,
+                summary=summary
+            )
+            db.add(new_report)
+            db.commit()
+    except Exception as e:
+        print(f"⚠️ Failed to save report to database: {e}")
+
+    try:
+        from ..services.qdrant_service import qdrant_service
+        qdrant_service.index_medical_report(
+            user_id=userId,
+            report_id=report_id,
+            summary=summary,
+            abnormalities=analysis_data.get("abnormalities", []),
+            recommendations=analysis_data.get("recommendations", []),
+            file_url=file_url
+        )
+    except Exception as e:
+        print(f"⚠️ Failed to index report in Qdrant: {e}")
     
     return analysis_data
 

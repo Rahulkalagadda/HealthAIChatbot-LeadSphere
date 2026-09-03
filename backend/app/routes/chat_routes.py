@@ -49,8 +49,8 @@ async def chat_endpoint(request: ChatRequest, db: Session = Depends(get_db)):
         history_formatted.append({"role": "user", "content": h.message})
         history_formatted.append({"role": "assistant", "content": h.response})
 
-    # 4. Generate AI response with user's selected language
-    ai_response = await AIService.get_chat_response(request.message, history_formatted, request.language)
+    # 4. Generate AI response with user's selected language and Qdrant context
+    ai_response = await AIService.get_chat_response(request.message, history_formatted, request.language, user_id=user.id)
 
     # 5. Store session
     chat_log = ChatHistory(user_id=user.id, message=request.message, response=ai_response, language=request.language)

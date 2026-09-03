@@ -36,10 +36,37 @@ class AIService:
     """
 
     @staticmethod
-    async def get_chat_response(message: str, history: list = None, language: str = "English"):
+    async def get_chat_response(message: str, history: list = None, language: str = "English", user_id: Optional[str] = None):
         system_content = AIService.SYSTEM_PROMPT
         if language and language.lower() not in ("english", "en"):
             system_content += f"\n\nCRITICAL LANGUAGE DIRECTIVE:\nThe user's selected language interface is {language}. You MUST formulate your entire response in {language}."
+
+        # Query Qdrant Cloud Knowledge Base for relevant context
+        qdrant_context = []
+        try:
+            from .qdrant_service import qdrant_service
+            # 1. Check emergency first-aid protocols
+            first_aid = qdrant_service.search_first_aid(message, top_k=1)
+            for fa in first_aid:
+                qdrant_context.append(f"[EMERGENCY PROTOCOL - {fa.get('emergency_type')}]: DO: {fa.get('immediate_dos')} | DO NOT: {fa.get('strict_donts')} | Helpline: {fa.get('emergency_helpline')}")
+
+            # 2. Check Government Schemes if financial assistance or welfare is relevant
+            scheme_keywords = ("scheme", "yojana", "card", "free", "money", "help", "fund", "bima", "ayushman", "bsky", "sarkar", "sarkari", "delivery", "hospital")
+            if any(k in message.lower() for k in scheme_keywords):
+                schemes = qdrant_service.search_schemes(message, top_k=2)
+                for s in schemes:
+                    qdrant_context.append(f"[GOVT SCHEME - {s.get('title')} ({s.get('state')})]: Coverage: {s.get('coverage_amount')}. Eligibility: {s.get('eligibility')}. Benefits: {s.get('benefits')}. Portal: {s.get('official_portal')}, Helpline: {s.get('helpline')}")
+
+            # 3. Check Patient's Past Lab Reports (for authenticated user)
+            if user_id and user_id != "guest":
+                past_reports = qdrant_service.search_patient_reports(user_id, message, top_k=2)
+                for pr in past_reports:
+                    qdrant_context.append(f"[PATIENT LAB RECORD ({pr.get('report_type')})]: Summary: {pr.get('summary')}. Abnormal parameters: {pr.get('abnormalities')}")
+        except Exception as e:
+            print(f"⚠️ Qdrant context retrieval error: {e}")
+
+        if qdrant_context:
+            system_content += "\n\n### VERIFIED KNOWLEDGE BASE CONTEXT (From Qdrant):\n" + "\n".join(qdrant_context) + "\nIncorporate this verified data naturally into your advice when relevant."
         
         messages = [{"role": "system", "content": system_content}]
         if history:

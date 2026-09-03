@@ -42,6 +42,10 @@ class Settings(BaseSettings):
     CLOUDINARY_API_KEY: str = ""
     CLOUDINARY_API_SECRET: str = ""
     
+    # Qdrant Cloud Vector Database Config
+    QDRANT_URL: Optional[str] = "https://56267e97-8134-439f-9565-25c2611f10a7.ca-central-1-0.aws.cloud.qdrant.io"
+    QDRANT_API_KEY: Optional[str] = None
+
     # JWT Config
     SECRET_KEY: str = "your-secret-key"
     ALGORITHM: str = "HS256"
