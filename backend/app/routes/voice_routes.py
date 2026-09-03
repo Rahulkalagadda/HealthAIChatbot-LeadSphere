@@ -30,6 +30,8 @@ async def transcribe_audio(
             clean_lang = language.lower()
             if "hi" in clean_lang:
                 lang_code = "hi"
+            elif "te" in clean_lang:
+                lang_code = "te"
             elif "or" in clean_lang:
                 lang_code = "or"
             elif "en" in clean_lang:

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-export type Language = "en" | "hi" | "or";
+export type Language = "en" | "hi" | "or" | "te";
 
 interface LanguageContextType {
   language: Language;
@@ -226,6 +226,79 @@ const translations = {
     "chat.suggest.fever": "ମୋର ଜ୍ୱର ହେଉଛି",
     "chat.suggest.schemes": "ଯୋଜନା ଯାଞ୍ଚ କରନ୍ତୁ",
     "chat.suggest.doctor": "ଡାକ୍ତର ବୁକ୍ କରନ୍ତୁ"
+  },
+
+  te: {
+    // Brand
+    "app.name": "సేవాసేతు AI",
+    "app.tagline": "AI ఆరోగ్య సహాయకుడు",
+
+    // Navigation
+    "nav.home": "హోమ్",
+    "nav.chat": "లైవ్ చాట్",
+    "nav.reports": "AI రిపోర్ట్ హబ్",
+    "nav.schemes": "ప్రభుత్వ పథకాలు",
+    "nav.appointments": "అపాయింట్‌మెంట్లు",
+    "nav.healthhub": "ఆరోగ్య కేంద్రం",
+    "nav.language": "ప్రాంతీయ భాష",
+    "nav.settings": "వ్యక్తిగత సెట్టింగ్‌లు",
+    "nav.help": "సహాయ కేంద్రం",
+    "nav.install": "యాప్ ఇన్‌స్టాల్ చేయండి",
+    
+    // UI Elements
+    "ui.search.placeholder": "లక్షణాలు, వైద్యులు లేదా పథకాలను శోధించండి...",
+    "ui.emergency": "అత్యవసర పరిస్థితి",
+    "ui.emergency.desc": "అంబులెన్స్ సేవల కోసం వెంటనే 108 కు డయల్ చేయండి",
+    "ui.call.now": "ఇప్పుడే కాల్ చేయండి",
+    "ui.gold.member": "గోల్డ్ మెంబర్",
+    "ui.main.menu": "ప్రధాన మెనూ",
+    "ui.support.care": "మద్దతు & సంరక్షణ",
+    "ui.thinking": "సేవా AI ఆలోచిస్తోంది...",
+    "ui.type.question": "మీ ఆరోగ్య ప్రశ్నను ఇక్కడ టైప్ చేయండి...",
+    "ui.listen": "వినండి",
+    "ui.listening": "వింటోంది...",
+
+    // Header
+    "govt.odisha": "ఆరోగ్య & కుటుంబ సంక్షేమం",
+    "health.welfare": "ప్రజారోగ్య విభాగం",
+    
+    // Home Page
+    "official.portal": "అధికారిక ఆరోగ్య పోర్టల్",
+    "digital.health.assistant": "మీ డిజిటల్ ఆరోగ్య సహాయకుడు",
+    "govt.description": "ఆరోగ్య & కుటుంబ సంక్షేమ విభాగం",
+    "health.guidance.desc": "మీకు నచ్చిన భాషలో తక్షణ ఆరోగ్య సలహా, టీకా షెడ్యూల్‌లు మరియు సంరక్షణ సమాచారాన్ని పొందండి.",
+    "start.health.chat": "ఆరోగ్య చాట్ ప్రారంభించండి",
+    "health.awareness.hub": "ఆరోగ్య అవగాహన కేంద్రం",
+    "emergency.contact": "అత్యవసర సంప్రదింపు",
+    "citizens.helped": "సహాయం పొందిన పౌరులు",
+    "health.queries.resolved": "పరిష్కరించబడిన ఆరోగ్య సమస్యలు",
+    "languages.supported": "మద్దతు ఉన్న భాషలు",
+    "key.features": "ముఖ్య ఫీచర్లు",
+    "multilingual.support": "బహుభాషా మద్దతు",
+    "multilingual.desc": "ఇంగ్లీష్, హిందీ, తెలుగు మరియు ఒడియాలో అందుబాటులో ఉంది",
+    "ai.health.assistant": "AI ఆరోగ్య సహాయకుడు",
+    "ai.assistant.desc": "24/7 తెలివైన ఆరోగ్య మార్గదర్శకత్వం",
+    "emergency.services": "అత్యవసర సేవలు",
+    "emergency.desc": "ఆరోగ్య కేంద్రాలకు శీఘ్ర ప్రవేశం",
+    
+    // Chat Page
+    "health.assistant.chat": "ఆరోగ్య సహాయక చాట్",
+    "odisha.health.assistant": "సేవా ఆరోగ్య సహాయకుడు",
+    "type.health.question": "మీ ఆరోగ్య ప్రశ్నను ఇక్కడ టైప్ చేయండి...",
+    "get.health.alerts": "ఆరోగ్య హెచ్చరికలను పొందండి",
+    "quick.links": "త్వరిత లింకులు",
+    "health.department": "ఆరోగ్య విభాగం",
+    "hello.assistant": "నమస్కారం! నేను మీ ఆరోగ్య సహాయకుడిని. ఈ రోజు నేను మీకు ఎలా సహాయపడగలను?",
+    
+    // Footer
+    "govt.copyright": "© 2025 ఆరోగ్య & కుటుంబ సంక్షేమ విభాగం",
+    "technical.support": "సాంకేతిక సహాయం కోసం: health.support@sevasetu.in | అత్యవసరం: 108",
+    
+    // Suggestions
+    "chat.welcome": "నమస్కారం! నేను సేవా అసిస్టెంట్‌ని. ఈ రోజు మీరు ఎలా భావిస్తున్నారు?",
+    "chat.suggest.fever": "నాకు జ్వరం ఉంది",
+    "chat.suggest.schemes": "పథకాలను సరిచూడండి",
+    "chat.suggest.doctor": "డాక్టర్‌ని బుక్ చేయండి"
   }
 };
 
@@ -240,7 +313,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 
   useEffect(() => {
     const savedLang = localStorage.getItem("preferred-language") as Language;
-    if (savedLang && ["en", "hi", "or"].includes(savedLang)) {
+    if (savedLang && ["en", "hi", "or", "te"].includes(savedLang)) {
       setLanguageState(savedLang);
     }
   }, []);

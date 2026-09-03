@@ -38,7 +38,7 @@ const Chat: React.FC = () => {
   
   // Initialize voice hook with current language
   const { isListening, isTranscribing, transcript, startListening, speak, stopSpeaking, setTranscript } = useVoice(
-    language === 'hi' ? 'hi-IN' : language === 'or' ? 'or-IN' : 'en-IN'
+    language === 'hi' ? 'hi-IN' : language === 'te' ? 'te-IN' : language === 'or' ? 'or-IN' : 'en-IN'
   );
 
   // Stop speaking when leaving the chat page
@@ -96,7 +96,7 @@ const Chat: React.FC = () => {
       const response = await chatService.sendMessage(
         textToSend, 
         user?.id || "user_123", 
-        language === 'en' ? 'English' : language === 'hi' ? 'Hindi' : 'Odia'
+        language === 'en' ? 'English' : language === 'hi' ? 'Hindi' : language === 'te' ? 'Telugu' : 'Odia'
       );
       
       const aiText = response.response || response.answer || response.text || "I understand. How else can I help?";

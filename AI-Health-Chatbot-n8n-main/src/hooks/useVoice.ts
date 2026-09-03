@@ -204,13 +204,16 @@ export const useVoice = (language: string = 'en-IN') => {
     // Find best regional voice
     const voices = window.speechSynthesis.getVoices();
     const preferredKeywords = [
+      "Google Telugu",
       "Google Hindi",
       "Google English (India)",
+      "Telugu",
       "Neural",
       "Heera",
       "Kalpana",
       "Natural",
-      "synthesis.voice.hi-IN"
+      "synthesis.voice.hi-IN",
+      "synthesis.voice.te-IN"
     ];
 
     let selectedVoice = null;
@@ -220,7 +223,7 @@ export const useVoice = (language: string = 'en-IN') => {
     }
 
     if (!selectedVoice) {
-      selectedVoice = voices.find(v => v.lang.startsWith('hi') || v.lang.startsWith('en-IN') || v.lang.startsWith('or'));
+      selectedVoice = voices.find(v => v.lang.startsWith('te') || v.lang.startsWith('hi') || v.lang.startsWith('en-IN') || v.lang.startsWith('or'));
     }
 
     if (selectedVoice) {

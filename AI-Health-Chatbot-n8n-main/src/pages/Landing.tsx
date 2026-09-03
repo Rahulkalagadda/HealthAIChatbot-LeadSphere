@@ -77,7 +77,7 @@ const Landing: React.FC = () => {
               <a href="#faq" className="hover:text-blue-600 transition-colors">FAQ</a>
               
               <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-[14px]">
-                {(['en', 'hi', 'or'] as const).map((lang) => (
+                {(['en', 'hi', 'te', 'or'] as const).map((lang) => (
                   <button 
                     key={lang}
                     onClick={() => setLanguage(lang)}

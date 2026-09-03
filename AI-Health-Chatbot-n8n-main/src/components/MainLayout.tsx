@@ -167,7 +167,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <div className="flex items-center gap-2 md:gap-3">
             {/* Language Selection */}
             <div className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-[14px]">
-              {(['en', 'hi', 'or'] as const).map((lang) => (
+              {(['en', 'hi', 'te', 'or'] as const).map((lang) => (
                 <button 
                   key={lang}
                   onClick={() => setLanguage(lang)}
@@ -258,7 +258,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           
           <div className="mt-auto flex flex-col gap-4 border-t border-slate-100 pt-8">
              <div className="flex items-center gap-6">
-               {(['en', 'hi', 'or'] as const).map((lang) => (
+               {(['en', 'hi', 'te', 'or'] as const).map((lang) => (
                  <button key={lang} onClick={() => { setLanguage(lang); setMobileMenuOpen(false); }} className={`text-xl font-black uppercase ${language === lang ? 'text-blue-600 underline decoration-4' : 'text-slate-400'}`}>{lang}</button>
                ))}
              </div>

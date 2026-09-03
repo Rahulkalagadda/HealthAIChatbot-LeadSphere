@@ -10,6 +10,7 @@ const LanguageSettings: React.FC = () => {
   const languages = [
     { name: "English", native: "English", code: "en" as Language },
     { name: "Hindi", native: "हिन्दी", code: "hi" as Language },
+    { name: "Telugu", native: "తెలుగు", code: "te" as Language },
     { name: "Odia", native: "ଓଡିଆ", code: "or" as Language }
   ];
 
@@ -35,7 +36,7 @@ const LanguageSettings: React.FC = () => {
       </section>
 
       {/* Language Selection Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {languages.map((lang) => (
           <button 
             key={lang.code} 
