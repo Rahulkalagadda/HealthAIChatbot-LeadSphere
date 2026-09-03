@@ -74,6 +74,14 @@ def startup_event():
     # 4. Initialize FAISS index
     rag_service.initialize_index(schemes_list)
 
+    # 5. Warm up FastEmbed model for instantaneous inference
+    try:
+        from .services.qdrant_service import qdrant_service
+        qdrant_service._load_embedder()
+        print(" FastEmbed model warmed up successfully.")
+    except Exception as e:
+        print(f"⚠️ FastEmbed warmup notice: {e}")
+
 # Include Routers with /api prefix as expected by frontend
 app.include_router(chat_routes.router, prefix="/api", tags=["Chat"])
 app.include_router(analysis_routes.router, prefix="/api", tags=["Analysis"])

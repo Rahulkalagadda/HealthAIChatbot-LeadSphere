@@ -43,6 +43,9 @@ RUN apt-get update \
 # Copy virtual environment from builder stage
 COPY --from=builder /opt/venv /opt/venv
 
+# Pre-download FastEmbed model during image build so runtime embeddings are instant
+RUN python -c "from fastembed import TextEmbedding; TextEmbedding(model_name='BAAI/bge-small-en-v1.5')"
+
 # Copy the backend project files
 COPY . /app/
 

@@ -42,32 +42,51 @@ class AIService:
         if language and language.lower() not in ("english", "en"):
             system_content += f"\n\nCRITICAL LANGUAGE DIRECTIVE:\nThe user's selected language interface is {language}. You MUST formulate your entire response in {language}."
 
-        # Query Qdrant Cloud Knowledge Base for relevant context
+        # Query Qdrant Cloud Knowledge Base for relevant context (max 2.0s timeout to guarantee instant response)
         qdrant_context = []
         try:
-            from .qdrant_service import qdrant_service
-            # 1. Check emergency first-aid protocols
-            first_aid = qdrant_service.search_first_aid(message, top_k=1)
-            for fa in first_aid:
-                qdrant_context.append(f"[EMERGENCY PROTOCOL - {fa.get('emergency_type')}]: DO: {fa.get('immediate_dos')} | DO NOT: {fa.get('strict_donts')} | Helpline: {fa.get('emergency_helpline')}")
+            import asyncio
 
-            # 2. Check Government Schemes if financial assistance or welfare is relevant
-            scheme_keywords = ("scheme", "yojana", "card", "free", "money", "help", "fund", "bima", "ayushman", "bsky", "sarkar", "sarkari", "delivery", "hospital")
-            if any(k in message.lower() for k in scheme_keywords):
-                schemes = qdrant_service.search_schemes(message, top_k=2)
-                for s in schemes:
-                    qdrant_context.append(f"[GOVT SCHEME - {s.get('title')} ({s.get('state')})]: Coverage: {s.get('coverage_amount')}. Eligibility: {s.get('eligibility')}. Benefits: {s.get('benefits')}. Portal: {s.get('official_portal')}, Helpline: {s.get('helpline')}")
+            async def _fetch_qdrant_context():
+                ctx = []
+                from .qdrant_service import qdrant_service
+                if not qdrant_service.client:
+                    return ctx
 
-            # 3. Check Patient's Past Lab Reports (for authenticated user)
-            if user_id and user_id != "guest":
-                past_reports = qdrant_service.search_patient_reports(user_id, message, top_k=2)
-                for pr in past_reports:
-                    qdrant_context.append(f"[PATIENT LAB RECORD ({pr.get('report_type')})]: Summary: {pr.get('summary')}. Abnormal parameters: {pr.get('abnormalities')}")
+                msg_lower = message.lower()
+
+                # 1. Emergency protocols (only if medical emergency keywords detected)
+                emergency_keywords = ("bite", "snake", "poison", "burn", "fever", "bleed", "pain", "fracture", "accident", "heatstroke", "stroke", "convulsion", "seizure", "emergency", "unconscious", "breath", "chok", "wound", "cut")
+                if any(k in msg_lower for k in emergency_keywords):
+                    first_aid = qdrant_service.search_first_aid(message, top_k=1)
+                    for fa in first_aid:
+                        ctx.append(f"[EMERGENCY PROTOCOL - {fa.get('emergency_type')}]: DO: {fa.get('immediate_dos')} | DO NOT: {fa.get('strict_donts')} | Helpline: {fa.get('emergency_helpline')}")
+
+                # 2. Government Schemes (only if scheme keywords detected)
+                scheme_keywords = ("scheme", "yojana", "card", "free", "money", "help", "fund", "bima", "ayushman", "bsky", "sarkar", "sarkari", "delivery", "hospital", "arogya")
+                if any(k in msg_lower for k in scheme_keywords):
+                    schemes = qdrant_service.search_schemes(message, top_k=2)
+                    for s in schemes:
+                        ctx.append(f"[GOVT SCHEME - {s.get('title')} ({s.get('state')})]: Coverage: {s.get('coverage_amount')}. Eligibility: {s.get('eligibility')}. Benefits: {s.get('benefits')}. Portal: {s.get('official_portal')}, Helpline: {s.get('helpline')}")
+
+                # 3. Patient Past Lab Reports (only for authenticated user with report queries)
+                if user_id and user_id != "guest":
+                    report_keywords = ("report", "test", "hemoglobin", "blood", "sugar", "scan", "last", "past", "history", "previous")
+                    if any(k in msg_lower for k in report_keywords):
+                        past_reports = qdrant_service.search_patient_reports(user_id, message, top_k=2)
+                        for pr in past_reports:
+                            ctx.append(f"[PATIENT LAB RECORD ({pr.get('report_type')})]: Summary: {pr.get('summary')}. Abnormal parameters: {pr.get('abnormalities')}")
+                return ctx
+
+            qdrant_context = await asyncio.wait_for(_fetch_qdrant_context(), timeout=2.0)
+        except asyncio.TimeoutError:
+            print("⚠️ Qdrant context retrieval timed out (> 2.0s), skipping to prevent request delay.")
         except Exception as e:
             print(f"⚠️ Qdrant context retrieval error: {e}")
 
         if qdrant_context:
             system_content += "\n\n### VERIFIED KNOWLEDGE BASE CONTEXT (From Qdrant):\n" + "\n".join(qdrant_context) + "\nIncorporate this verified data naturally into your advice when relevant."
+
         
         messages = [{"role": "system", "content": system_content}]
         if history:
