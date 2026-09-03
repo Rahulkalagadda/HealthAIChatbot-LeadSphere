@@ -1,43 +1,61 @@
-const CACHE_NAME = 'sevasetu-v1';
-const ASSETS = [
-  '/',
-  '/index.html',
+const CACHE_NAME = 'sevasetu-v2';
+const STATIC_ASSETS = [
   '/manifest.json',
   '/logo-192.png',
-  '/logo-512.png'
+  '/logo-512.png',
+  '/hero-bg.png'
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
+      return cache.addAll(STATIC_ASSETS);
     })
   );
 });
 
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
 self.addEventListener('fetch', (event) => {
-  // Skip cross-origin requests (like API calls to different domains)
-  if (!event.request.url.startsWith(self.location.origin)) {
+  // Skip non-GET requests and cross-origin calls (e.g. to Railway API)
+  if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
     return;
   }
 
-  // Skip API calls to own domain if any
+  // Skip API calls
   if (event.request.url.includes('/api/')) {
     return;
   }
 
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
+  // 1. Network-First for HTML documents/routes to avoid 404 on newly deployed asset hashes
+  if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('/')))
+    );
     return;
   }
 
+  // 2. Cache-first with Network fallback for static images
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached version or fetch from network
-      return response || fetch(event.request);
-    }).catch(() => {
-      // Fallback for failed network requests
-      return caches.match('/');
+    caches.match(event.request).then((cached) => {
+      return cached || fetch(event.request);
     })
   );
 });
