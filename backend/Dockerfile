@@ -17,12 +17,11 @@ RUN apt-get update \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install dependencies (handles both root context and backend folder context)
-COPY requirements.txt* backend/requirements.txt* /app/
-RUN if [ -f /app/backend/requirements.txt ]; then mv /app/backend/requirements.txt /app/requirements.txt; fi
+# Install dependencies
+COPY requirements.txt /app/
 
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r /app/requirements.txt
+    && pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Runtime
 FROM python:3.10.12-slim
@@ -31,7 +30,7 @@ FROM python:3.10.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH" \
-    PYTHONPATH="/app:/app/backend:$PYTHONPATH"
+    PYTHONPATH="/app"
 
 WORKDIR /app
 
@@ -50,5 +49,5 @@ COPY . /app/
 # Expose the default port
 EXPOSE 8000
 
-# Bind to dynamic Railway $PORT with fallback to 8000 (resolves app.main in /app or /app/backend)
-CMD ["sh", "-c", "if [ -d /app/backend/app ]; then cd /app/backend; fi && gunicorn --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:${PORT:-8000} app.main:app"]
+# Bind to dynamic Railway $PORT with fallback to 8000
+CMD ["sh", "-c", "gunicorn --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:${PORT:-8000} app.main:app"]
