@@ -33,6 +33,7 @@ import Helplines from "./pages/Helplines";
 import PdfLibrary from "./pages/PdfLibrary";
 import FacilityDetail from "./pages/FacilityDetail";
 import SchemeDetail from "./pages/SchemeDetail";
+import OfflineFirstAid from "./pages/OfflineFirstAid";
 import NotFound from "./pages/NotFound";
 import MainLayout from "./components/MainLayout";
 
@@ -49,8 +50,9 @@ const App = () => (
               <Sonner />
               <BrowserRouter>
                 <Routes>
-                  {/* Public Landing Page */}
+                  {/* Public Landing & Emergency Pages */}
                   <Route path="/" element={<Landing />} />
+                  <Route path="/offline-first-aid" element={<OfflineFirstAid />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   

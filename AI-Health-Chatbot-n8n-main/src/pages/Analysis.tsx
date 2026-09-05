@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { analysisService } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
+import { compressImage } from "../utils/imageCompressor";
 import { 
   Card, 
   CardContent, 
@@ -49,11 +50,13 @@ const Analysis: React.FC = () => {
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
+    const originalFile = event.target.files?.[0];
+    if (originalFile) {
+      // Compress large phone camera images instantly to speed up transmission
+      const fileToUpload = await compressImage(originalFile);
+      const imageUrl = URL.createObjectURL(fileToUpload);
       setSelectedImage(imageUrl);
-      handleUpload(file);
+      handleUpload(fileToUpload);
     }
   };
 

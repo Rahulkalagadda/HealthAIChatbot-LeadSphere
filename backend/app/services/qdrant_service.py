@@ -106,9 +106,11 @@ class QdrantService:
         return True
 
     def search_schemes(self, query: str, state: Optional[str] = None, top_k: int = 3) -> List[Dict[str, Any]]:
+        """Hybrid Search: Combines dense vector similarity with token keyword boosting for guaranteed accuracy."""
         if not self.client or not query:
             return []
 
+        import re
         from qdrant_client.http import models
 
         query_vector = self.embed_text(query)
@@ -122,22 +124,45 @@ class QdrantService:
                 ]
             )
 
+        # Retrieve top candidates via vector cosine distance
+        candidate_limit = max(top_k * 2, 6)
         if hasattr(self.client, "query_points"):
             results = self.client.query_points(
                 collection_name="health_schemes",
                 query=query_vector,
                 query_filter=query_filter,
-                limit=top_k
+                limit=candidate_limit
             ).points
         else:
             results = self.client.search(
                 collection_name="health_schemes",
                 query_vector=query_vector,
                 query_filter=query_filter,
-                limit=top_k
+                limit=candidate_limit
             )
 
-        return [hit.payload for hit in results]
+        # Keyword token scoring for hybrid re-ranking
+        tokens = set(re.findall(r'\b\w{3,}\b', query.lower()))
+        scored_results = []
+
+        for hit in results:
+            payload = hit.payload or {}
+            score = getattr(hit, 'score', 0.0) or 0.0
+
+            # Match tokens against title, category, eligibility, benefits
+            searchable_text = f"{payload.get('title', '')} {payload.get('category', '')} {payload.get('eligibility', '')} {payload.get('benefits', '')}".lower()
+            token_matches = sum(1 for token in tokens if token in searchable_text)
+            
+            # Exact title boost
+            title_boost = 0.5 if any(token in payload.get('title', '').lower() for token in tokens) else 0.0
+            hybrid_score = score + (token_matches * 0.15) + title_boost
+
+            scored_results.append((hybrid_score, payload))
+
+        # Sort by hybrid score descending
+        scored_results.sort(key=lambda x: x[0], reverse=True)
+        return [p for _, p in scored_results[:top_k]]
+
 
     # =========================================================================
     # 2. Patient Medical Reports KB (Longitudinal Patient Memory)
@@ -242,24 +267,47 @@ class QdrantService:
         return True
 
     def search_first_aid(self, query: str, top_k: int = 2) -> List[Dict[str, Any]]:
+        """Hybrid Search: Matches emergency vector similarity and boosts exact trauma/symptom types."""
         if not self.client or not query:
             return []
 
+        import re
+
         query_vector = self.embed_text(query)
+        candidate_limit = max(top_k * 2, 4)
+
         if hasattr(self.client, "query_points"):
             results = self.client.query_points(
                 collection_name="rural_first_aid",
                 query=query_vector,
-                limit=top_k
+                limit=candidate_limit
             ).points
         else:
             results = self.client.search(
                 collection_name="rural_first_aid",
                 query_vector=query_vector,
-                limit=top_k
+                limit=candidate_limit
             )
 
-        return [hit.payload for hit in results]
+        tokens = set(re.findall(r'\b\w{3,}\b', query.lower()))
+        scored_results = []
+
+        for hit in results:
+            payload = hit.payload or {}
+            score = getattr(hit, 'score', 0.0) or 0.0
+
+            searchable_text = f"{payload.get('emergency_type', '')} {payload.get('title', '')} {payload.get('immediate_dos', '')}".lower()
+            token_matches = sum(1 for token in tokens if token in searchable_text)
+
+            # Boost exact emergency type match (e.g. "snake" -> "snake_bite")
+            type_boost = 0.6 if any(token in payload.get('emergency_type', '').lower() for token in tokens) else 0.0
+            hybrid_score = score + (token_matches * 0.15) + type_boost
+
+            scored_results.append((hybrid_score, payload))
+
+        scored_results.sort(key=lambda x: x[0], reverse=True)
+        return [p for _, p in scored_results[:top_k]]
+
 
 # Singleton instance
 qdrant_service = QdrantService()

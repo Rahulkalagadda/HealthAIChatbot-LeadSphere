@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { schemesService, alertsService } from "../services/api";
 import { toast } from "sonner";
+import { SchemeWizard } from "../components/SchemeWizard";
 
 interface Scheme {
   title: string;
@@ -71,42 +72,46 @@ const GovtSchemes: React.FC = () => {
   };
 
   return (
-    <div className="p-6 md:p-14 max-w-7xl mx-auto w-full space-y-20 pb-32">
-      {/* Premium Search Hero */}
-      <section className="relative space-y-12 animate-in slide-in-from-top-10 duration-1000">
-        <div className="space-y-6">
-          <div className="inline-flex items-center gap-3 px-5 py-2 bg-blue-50 border border-blue-100 rounded-full text-blue-600 shadow-sm">
-            <ShieldCheck className="w-4 h-4" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Verified Social Security API</span>
+    <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-10 pb-28 md:pb-12">
+      {/* Search Hero */}
+      <section className="relative space-y-6 animate-in slide-in-from-top-4 duration-500">
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-50 border border-blue-100 rounded-full text-blue-600 shadow-sm">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Verified Social Security Engine</span>
           </div>
-          <h1 className="text-6xl md:text-[90px] font-black font-headline leading-[0.85] tracking-tighter text-slate-800 uppercase italic">
-            Find Your <br/>
-            <span className="text-blue-600 underline decoration-blue-100 decoration-[12px] underline-offset-8">Care Hub</span>.
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-slate-800">
+            Government Health <span className="text-blue-600 underline decoration-blue-200 decoration-4 underline-offset-4">Assurance Hub</span>
           </h1>
-          <p className="text-xl md:text-2xl text-slate-400 max-w-2xl font-bold leading-relaxed">
-            Seva AI scans 500+ Central and State health schemes in milliseconds to find the coverage you deserve.
+          <p className="text-sm md:text-base text-slate-500 max-w-2xl font-semibold leading-relaxed">
+            Instant access to 500+ Central and State health schemes, cashless hospital coverage, and eligibility rules for Bharat.
           </p>
         </div>
 
-        <form onSubmit={handleSearch} className="relative max-w-4xl group">
-           <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
-              <Search className="w-6 h-6 text-blue-600 group-focus-within:scale-110 transition-transform" />
+        <form onSubmit={handleSearch} className="relative max-w-3xl group">
+           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <Search className="w-5 h-5 text-blue-600 group-focus-within:scale-110 transition-transform" />
            </div>
            <input 
               type="text"
-              placeholder="Search diseases, scheme names, or keywords (e.g. Cancer, Pregnancy)..."
-              className="w-full bg-white border-4 border-slate-100 rounded-[40px] py-8 pl-20 pr-40 text-xl font-bold placeholder:text-slate-300 outline-none focus:border-blue-500 shadow-2xl focus:shadow-blue-200/50 transition-all"
+              placeholder="Search diseases, scheme names, or keywords (e.g., Ayushman, Cancer, Dialysis)..."
+              className="w-full bg-white border border-slate-200 rounded-2xl py-3.5 pl-12 pr-32 text-sm font-semibold placeholder:text-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-sm transition-all"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
            />
            <button 
               type="submit"
               disabled={isLoading}
-              className="absolute right-4 top-4 bottom-4 bg-slate-900 text-white px-10 rounded-[28px] font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:bg-blue-600 transition-all active:scale-95 disabled:opacity-50"
+              className="absolute right-2 top-2 bottom-2 bg-blue-600 text-white px-6 rounded-xl font-bold text-xs uppercase tracking-wider shadow-md hover:bg-blue-700 transition-all active:scale-95 disabled:opacity-50"
            >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : "Discover"}
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Search"}
            </button>
         </form>
+      </section>
+
+      {/* Standout Feature: Smart Scheme Eligibility Wizard */}
+      <section>
+        <SchemeWizard />
       </section>
 
       {/* Main Content Grid */}

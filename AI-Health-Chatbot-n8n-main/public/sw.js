@@ -1,5 +1,7 @@
-const CACHE_NAME = 'sevasetu-v2';
+const CACHE_NAME = 'sevasetu-v3';
 const STATIC_ASSETS = [
+  '/',
+  '/offline-first-aid',
   '/manifest.json',
   '/logo-192.png',
   '/logo-512.png',

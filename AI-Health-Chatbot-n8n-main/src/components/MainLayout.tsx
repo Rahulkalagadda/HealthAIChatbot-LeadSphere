@@ -28,10 +28,13 @@ import {
   ChevronDown,
   Globe,
   LogOut,
-  DownloadCloud
+  DownloadCloud,
+  WifiOff
 } from "lucide-react";
 
 import { usePWAInstall } from "../hooks/usePWAInstall";
+import { useOfflineStatus } from "../hooks/useOfflineStatus";
+import { CommandPalette } from "./CommandPalette";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -43,10 +46,24 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { notifications, markAsRead, unreadCount } = useNotifications();
   const { user, logout } = useAuth();
   const { installPrompt, isInstalled, handleInstall } = usePWAInstall();
+  const { isOffline } = useOfflineStatus();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any>(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+  // Global shortcut: Ctrl+K / Cmd+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const isActive = (path: string) => location.pathname === path;
   const isChat = location.pathname === "/chat";
@@ -89,8 +106,21 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div className="flex flex-col h-screen bg-[#F8FAFC] font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
-      {/* Premium Navigation Header */}
-      <header className="fixed top-0 w-full z-[200] bg-white/80 backdrop-blur-xl border-b border-slate-200/60 h-16 md:h-20 lg:h-16 shadow-sm">
+      {/* Offline Mode Banner */}
+      {isOffline && (
+        <div className="fixed top-0 left-0 right-0 z-[300] bg-amber-500 text-white px-4 py-1.5 text-xs font-bold flex items-center justify-between shadow-md animate-in slide-in-from-top-2">
+          <div className="flex items-center gap-2">
+            <WifiOff className="w-3.5 h-3.5 animate-pulse" />
+            <span>No Internet Connection • 100% Offline Emergency First-Aid Pocketbook is Active.</span>
+          </div>
+          <Link to="/offline-first-aid" className="underline hover:text-amber-100 font-extrabold text-[11px] uppercase tracking-wider">
+            Open First-Aid →
+          </Link>
+        </div>
+      )}
+
+      {/* Navigation Header */}
+      <header className={`fixed ${isOffline ? 'top-8' : 'top-0'} w-full z-[200] bg-white/80 backdrop-blur-xl border-b border-slate-200/60 h-16 md:h-20 lg:h-16 shadow-sm transition-all`}>
         <div className="max-w-[1600px] mx-auto h-full px-4 md:px-8 flex items-center justify-between gap-8">
           <Link to="/" className="flex items-center gap-3 group shrink-0">
             <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-100 group-hover:rotate-6 transition-transform">
@@ -102,7 +132,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           </Link>
 
-          {/* Functional Search Bar */}
+          {/* Functional Search Bar with Ctrl+K trigger */}
           <div className="hidden lg:flex relative items-center bg-slate-100/80 px-4 py-2.5 rounded-2xl w-[450px] border border-slate-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500/50 transition-all duration-300 group">
             <Search className="text-slate-400 group-focus-within:text-blue-500 transition-colors w-4 h-4" />
             <input 
@@ -114,6 +144,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             />
+            
+            {/* Quick Ctrl+K trigger button */}
+            <button
+              type="button"
+              onClick={() => setIsCommandPaletteOpen(true)}
+              className="flex items-center gap-1 bg-white border border-slate-200 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold text-slate-400 hover:text-blue-600 hover:border-blue-300 transition-colors ml-2 shrink-0 shadow-sm"
+              title="Press Ctrl+K or Cmd+K"
+            >
+              <span>⌘K</span>
+            </button>
             
             {/* Search Results Overlay */}
             {isSearchFocused && searchResults && (searchQuery.trim() !== "") && (
@@ -306,6 +346,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     {t("nav.install")}
                   </button>
                 )}
+                <Link to="/offline-first-aid" className="flex items-center gap-4 text-slate-500 hover:text-red-600 hover:bg-red-50 px-4 py-3 rounded-xl transition-all font-semibold text-sm group">
+                  <WifiOff className="w-5 h-5 text-red-500 stroke-2 group-hover:scale-110 transition-transform" />
+                  <span>Offline Pocketbook</span>
+                </Link>
                 <Link to="/language" className="flex items-center gap-4 text-slate-500 hover:text-blue-600 hover:bg-blue-50 px-4 py-3 rounded-xl transition-all font-semibold text-sm group">
                   <Languages className="w-5 h-5 stroke-2 group-hover:scale-110 transition-transform" />
                   {t("nav.language")}
@@ -331,12 +375,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   <span className="font-bold text-red-600 text-sm">{t("ui.emergency")}</span>
                 </div>
                 <p className="text-[11px] text-red-700/70 font-bold leading-tight uppercase tracking-wider">{t("ui.emergency.desc")}</p>
-                <button 
-                  onClick={() => toast.error("Dialing Emergency 108...")}
-                  className="w-full py-2.5 bg-red-600 text-white rounded-xl text-xs font-black shadow-lg shadow-red-200 active:scale-95 transition-all hover:bg-red-700 uppercase tracking-widest"
+                <a 
+                  href="tel:108"
+                  className="w-full text-center py-2.5 bg-red-600 text-white rounded-xl text-xs font-black shadow-lg shadow-red-200 active:scale-95 transition-all hover:bg-red-700 uppercase tracking-widest block"
                 >
                   {t("ui.call.now")}
-                </button>
+                </a>
               </div>
             </div>
 
@@ -350,48 +394,54 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           </div>
         </aside>
 
-        {/* Main Content Canvas */}
+        {/* Main Content Canvas with Balanced Ergonomic Padding */}
         <main className={`flex-1 min-h-0 ${isChat ? "flex flex-col h-full overflow-hidden" : "overflow-y-auto scroll-smooth"}`}>
-          <div className={`${isChat ? "flex-1 min-h-0 flex flex-col h-full overflow-hidden pb-24 md:pb-0" : "min-h-[calc(100vh-64px)] w-full pb-44 md:pb-12"}`}>
+          <div className={`${isChat ? "flex-1 min-h-0 flex flex-col h-full overflow-hidden pb-16 md:pb-0" : "min-h-[calc(100vh-64px)] w-full pb-20 md:pb-8"}`}>
             {children}
           </div>
         </main>
       </div>
 
-      {/* Mobile Floating PWA Dock Navigation */}
-      <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-[200] pwa-tap-highlight-none">
-        <div className="bg-white/80 backdrop-blur-2xl border border-white/40 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] rounded-[32px] px-2 py-2 flex items-center justify-between pointer-events-auto">
-          <Link to="/" className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all active:scale-75 ${isActive('/') ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'text-slate-400'}`}>
-            <Home className="w-6 h-6" strokeWidth={isActive('/') ? 2.5 : 2} />
+      {/* Docked Native Mobile Tab Bar */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[200] bg-white/95 backdrop-blur-xl border-t border-slate-200/80 px-2 py-1.5 pb-[max(env(safe-area-inset-bottom),8px)] shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+        <div className="flex items-center justify-around max-w-lg mx-auto">
+          <Link to="/" className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all active:scale-95 ${isActive('/') ? 'text-blue-600 font-bold' : 'text-slate-400'}`}>
+            <Home className="w-5 h-5" strokeWidth={isActive('/') ? 2.5 : 2} />
+            <span className="text-[10px] mt-1 font-bold">Home</span>
           </Link>
-          <Link to="/chat" className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all active:scale-75 ${isActive('/chat') ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'text-slate-400'}`}>
-            <MessageSquare className="w-6 h-6" strokeWidth={isActive('/chat') ? 2.5 : 2} />
+
+          <Link to="/chat" className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all active:scale-95 ${isActive('/chat') ? 'text-blue-600 font-bold' : 'text-slate-400'}`}>
+            <MessageSquare className="w-5 h-5" strokeWidth={isActive('/chat') ? 2.5 : 2} />
+            <span className="text-[10px] mt-1 font-bold">Consult</span>
           </Link>
-          
-          <button 
-            onClick={() => toast.error("Dialing Emergency 108...")}
-            className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center text-white shadow-2xl shadow-red-200 -mt-8 border-[6px] border-[#F8FAFC] active:rotate-12 active:scale-90 transition-all"
+
+          {/* Raised Emergency 108 Action Dialer */}
+          <a 
+            href="tel:108"
+            className="w-12 h-12 -mt-5 bg-gradient-to-tr from-red-600 to-rose-500 rounded-full flex flex-col items-center justify-center text-white shadow-lg shadow-red-300 border-4 border-white active:scale-90 transition-all group"
+            title="Dial 108 Emergency"
           >
-            <PhoneCall className="w-7 h-7 animate-pulse" strokeWidth={3} />
-          </button>
-          
-          <Link to="/analysis" className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all active:scale-75 ${isActive('/analysis') ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'text-slate-400'}`}>
-            <FileText className="w-6 h-6" strokeWidth={isActive('/analysis') ? 2.5 : 2} />
+            <PhoneCall className="w-5 h-5 animate-pulse" strokeWidth={2.5} />
+            <span className="text-[8px] font-black leading-none mt-0.5">108</span>
+          </a>
+
+          <Link to="/schemes" className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all active:scale-95 ${isActive('/schemes') ? 'text-blue-600 font-bold' : 'text-slate-400'}`}>
+            <ShieldCheck className="w-5 h-5" strokeWidth={isActive('/schemes') ? 2.5 : 2} />
+            <span className="text-[10px] mt-1 font-bold">Schemes</span>
           </Link>
-          <Link to="/profile" className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all active:scale-75 ${isActive('/profile') ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'text-slate-400'}`}>
-            <User className="w-6 h-6" strokeWidth={isActive('/profile') ? 2.5 : 2} />
+
+          <Link to="/analysis" className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all active:scale-95 ${isActive('/analysis') ? 'text-blue-600 font-bold' : 'text-slate-400'}`}>
+            <FileText className="w-5 h-5" strokeWidth={isActive('/analysis') ? 2.5 : 2} />
+            <span className="text-[10px] mt-1 font-bold">Reports</span>
           </Link>
-          
-          {installPrompt && !isInstalled && (
-            <button 
-              onClick={handleInstall}
-              className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all active:scale-75 text-blue-600 border border-blue-100 bg-blue-50/50"
-            >
-              <DownloadCloud className="w-6 h-6 animate-bounce" strokeWidth={2.5} />
-            </button>
-          )}
         </div>
       </nav>
+
+      {/* Global Command Palette (Ctrl+K) */}
+      <CommandPalette 
+        isOpen={isCommandPaletteOpen} 
+        onClose={() => setIsCommandPaletteOpen(false)} 
+      />
     </div>
   );
 };
