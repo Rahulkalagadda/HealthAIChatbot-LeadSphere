@@ -22,11 +22,12 @@ import {
   Camera,
   Users,
   TrendingUp,
-  Search
+  Search,
+  DownloadCloud,
+  WifiOff
 } from "lucide-react";
 
 import { usePWAInstall } from "../hooks/usePWAInstall";
-import { DownloadCloud } from "lucide-react";
 
 const Landing: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
