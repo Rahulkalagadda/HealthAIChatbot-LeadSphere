@@ -143,58 +143,58 @@ const Analysis: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Document Preview Side */}
-          <div className="lg:col-span-5 xl:col-span-4 sticky top-8">
-            <Card className="overflow-hidden border-none shadow-2xl shadow-slate-200/50 bg-white rounded-3xl group">
-              <CardHeader className="bg-slate-50/80 border-b border-slate-100 py-4 px-6">
+          {/* Document Preview Side (Static on mobile, Sticky on desktop) */}
+          <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-8 static z-10">
+            <Card className="overflow-hidden border border-slate-200/80 shadow-sm bg-white rounded-2xl md:rounded-3xl group">
+              <CardHeader className="bg-slate-50/90 border-b border-slate-100 py-3.5 px-5">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-bold flex items-center gap-2 text-slate-600 uppercase tracking-widest">
+                  <h3 className="text-xs font-bold flex items-center gap-2 text-slate-600 uppercase tracking-wider">
                     <FileText className="w-4 h-4 text-blue-600" />
                     Medical Document
                   </h3>
-                  {selectedImage && <Badge variant="outline" className="bg-emerald-50 text-emerald-600 border-emerald-100">OCR Ready</Badge>}
+                  {selectedImage && <Badge variant="outline" className="bg-emerald-50 text-emerald-600 border-emerald-200 text-[10px] font-bold">OCR Ready</Badge>}
                 </div>
               </CardHeader>
-              <CardContent className="p-0">
+              <CardContent className="p-0 bg-slate-50/50">
                 <div 
                   onClick={!selectedImage ? handleUploadClick : undefined}
-                  className={`aspect-[3/4] bg-slate-100 flex items-center justify-center relative overflow-hidden ${!selectedImage ? 'cursor-pointer hover:bg-slate-200/50' : ''} transition-colors`}
+                  className={`min-h-[240px] max-h-[360px] md:max-h-none md:aspect-[3/4] bg-slate-100/70 flex items-center justify-center relative overflow-hidden ${!selectedImage ? 'cursor-pointer hover:bg-slate-200/50' : ''} transition-colors`}
                 >
                   {selectedImage ? (
                     <img 
-                      className="w-full h-full object-contain p-2 animate-in zoom-in-95 duration-500" 
+                      className="max-h-[340px] md:max-h-none w-full h-full object-contain p-2 animate-in zoom-in-95 duration-500" 
                       alt="Uploaded medical document" 
                       src={selectedImage}
                     />
                   ) : (
-                    <div className="flex flex-col items-center gap-5 p-8 text-center text-slate-400 group-hover:text-blue-600 transition-colors">
-                      <div className="p-6 rounded-[2rem] bg-white shadow-xl shadow-slate-200 group-hover:shadow-blue-600/15 group-hover:scale-110 transition-all duration-300 border border-slate-100">
-                        {isUploading ? <Loader2 className="w-10 h-10 animate-spin text-blue-600" /> : <Upload className="w-10 h-10 text-blue-600" />}
+                    <div className="flex flex-col items-center gap-4 p-6 text-center text-slate-400 group-hover:text-blue-600 transition-colors">
+                      <div className="p-5 rounded-2xl bg-white shadow-md group-hover:shadow-blue-600/15 group-hover:scale-105 transition-all duration-300 border border-slate-100">
+                        {isUploading ? <Loader2 className="w-8 h-8 animate-spin text-blue-600" /> : <Upload className="w-8 h-8 text-blue-600" />}
                       </div>
                       <div>
-                        <h4 className="font-black text-lg text-slate-800 mb-1.5">Upload Medical Report</h4>
-                        <p className="text-xs text-slate-500 font-medium px-2 mb-3">Click to browse or drop your document here</p>
+                        <h4 className="font-bold text-base text-slate-800 mb-1">Upload Medical Report</h4>
+                        <p className="text-xs text-slate-500 font-medium px-2 mb-2.5">Click to browse or drop your document here</p>
                         <div className="flex flex-wrap justify-center gap-1.5">
-                          <span className="px-2.5 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">JPG</span>
-                          <span className="px-2.5 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">PNG</span>
-                          <span className="px-2.5 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">PDF</span>
+                          <span className="px-2 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">JPG</span>
+                          <span className="px-2 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">PNG</span>
+                          <span className="px-2 py-0.5 rounded-md bg-slate-200/70 text-[10px] font-bold text-slate-600">PDF</span>
                         </div>
                       </div>
                     </div>
                   )}
                   
                   {isUploading && (
-                    <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex flex-col items-center justify-center animate-pulse">
-                      <Zap className="w-12 h-12 text-blue-600 animate-bounce mb-4" />
-                      <p className="font-black text-blue-600 uppercase tracking-[0.2em] text-xs">AI Processing...</p>
+                    <div className="absolute inset-0 bg-white/75 backdrop-blur-[2px] flex flex-col items-center justify-center animate-pulse">
+                      <Zap className="w-10 h-10 text-blue-600 animate-bounce mb-3" />
+                      <p className="font-black text-blue-600 uppercase tracking-wider text-xs">AI Processing...</p>
                     </div>
                   )}
                 </div>
               </CardContent>
               {selectedImage && (
-                <CardFooter className="bg-slate-50/50 p-4 flex justify-center">
-                  <button onClick={handleUploadClick} className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
-                    <Upload className="w-3 h-3" /> Change Document
+                <CardFooter className="bg-slate-50 border-t border-slate-100 p-3 flex justify-center">
+                  <button onClick={handleUploadClick} className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 transition-colors">
+                    <Upload className="w-3.5 h-3.5" /> Change Document
                   </button>
                 </CardFooter>
               )}
@@ -267,35 +267,47 @@ const Analysis: React.FC = () => {
               <div className="space-y-6 animate-in slide-in-from-bottom-8 fade-in duration-1000">
                 
                 {/* Main Summary Card */}
-                <Card className="border-none shadow-2xl shadow-slate-200/50 bg-white rounded-3xl overflow-hidden">
-                  <div className="p-8 md:p-10">
-                    <div className="flex items-center gap-4 mb-8">
-                       <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-400 flex items-center justify-center text-white shadow-xl rotate-3">
-                        <Activity className="w-8 h-8" strokeWidth={3} />
+                <Card className="border border-slate-200/80 shadow-sm bg-white rounded-2xl md:rounded-3xl overflow-hidden">
+                  <div className="p-5 md:p-8">
+                    <div className="flex items-center gap-3.5 mb-6">
+                       <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shrink-0">
+                        <Activity className="w-6 h-6" strokeWidth={2.5} />
                       </div>
                       <div>
-                        <h2 className="text-2xl font-black text-slate-900 leading-tight">Medical Insight Report</h2>
-                        <div className="flex items-center gap-2">
-                           <Badge className="bg-emerald-50 text-emerald-600 border-none px-2 py-0 text-[10px] font-black uppercase tracking-wider">Analysis Complete</Badge>
+                        <h2 className="text-xl md:text-2xl font-bold text-slate-900 leading-tight">Medical Insight Report</h2>
+                        <div className="flex items-center gap-2 pt-0.5">
+                           <Badge className="bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0 text-[10px] font-bold uppercase tracking-wider">Analysis Complete</Badge>
                            <span className="text-slate-300">•</span>
-                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Powered by Seva AI</span>
+                           <span className="text-[10px] font-semibold text-slate-400">Powered by Seva AI</span>
                         </div>
                       </div>
                     </div>
 
                     <Tabs defaultValue="summary" className="w-full">
-                      <TabsList className="grid w-full grid-cols-2 bg-slate-100 p-1.5 h-14 rounded-2xl mb-8">
-                        <TabsTrigger value="summary" className="rounded-xl font-black text-xs uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:shadow-sm text-slate-500 data-[state=active]:text-blue-600">Executive Summary</TabsTrigger>
-                        <TabsTrigger value="details" className="rounded-xl font-black text-xs uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:shadow-sm text-slate-500 data-[state=active]:text-blue-600">Detailed Breakdown</TabsTrigger>
+                      <TabsList className="grid w-full grid-cols-2 bg-slate-100 p-1 h-11 rounded-xl mb-6">
+                        <TabsTrigger value="summary" className="rounded-lg font-bold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm text-slate-600 data-[state=active]:text-blue-600">Executive Summary</TabsTrigger>
+                        <TabsTrigger value="details" className="rounded-lg font-bold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm text-slate-600 data-[state=active]:text-blue-600">Detailed Breakdown</TabsTrigger>
                       </TabsList>
                       
-                      <TabsContent value="summary" className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
-                        <div className="bg-slate-50/80 rounded-3xl p-6 md:p-8 border border-slate-100">
-                          <p className="text-lg md:text-xl text-slate-700 font-bold leading-relaxed italic">
-                            "{reportData.summary}"
-                          </p>
-                          {reportData.detailed_explanation && (
-                            <p className="mt-4 text-slate-600 leading-relaxed font-medium">
+                      <TabsContent value="summary" className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-5 md:p-6 space-y-3">
+                          {reportData.summary && (reportData.summary.includes("exceed") || reportData.summary.includes("tokens") || reportData.summary.includes("Error analyzing")) ? (
+                            <div className="flex items-start gap-3 text-amber-900 text-xs md:text-sm">
+                              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                              <div className="space-y-1">
+                                <p className="font-bold text-slate-900">Medical Document Uploaded & Processed</p>
+                                <p className="text-slate-600 leading-relaxed">
+                                  Your medical document has been registered. For complex multi-page scans, please consult with your healthcare provider or check the extracted parameters under Detailed Breakdown.
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-base md:text-lg text-slate-800 font-semibold leading-relaxed">
+                              "{reportData.summary}"
+                            </p>
+                          )}
+                          {reportData.detailed_explanation && !reportData.detailed_explanation.includes("Error code") && (
+                            <p className="text-xs md:text-sm text-slate-600 leading-relaxed font-medium pt-1 border-t border-slate-100">
                               {reportData.detailed_explanation}
                             </p>
                           )}

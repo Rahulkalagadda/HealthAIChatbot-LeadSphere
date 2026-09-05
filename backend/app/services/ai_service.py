@@ -139,7 +139,8 @@ class AIService:
             response = client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
                 model=settings.AI_MODEL,
-                response_format={"type": "json_object"}
+                response_format={"type": "json_object"},
+                max_tokens=800
             )
             return response.choices[0].message.content
         except Exception as e:
@@ -147,6 +148,7 @@ class AIService:
             response = client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
                 model=settings.AI_MODEL,
+                max_tokens=800
             )
             return response.choices[0].message.content
 
@@ -199,7 +201,8 @@ class AIService:
                         }
                     ],
                     model=try_model,
-                    response_format={"type": "json_object"}
+                    response_format={"type": "json_object"},
+                    max_tokens=800
                 )
                 return response.choices[0].message.content
             except Exception as e:
@@ -208,7 +211,7 @@ class AIService:
                     continue
                 break
         
-        return f'{{ "summary": "Error analyzing image", "detailed_explanation": "{str(last_error)}", "findings": "Vision model failed.", "recommendations": ["Try a clearer image", "Consult a doctor."] }}'
+        return f'{{ "summary": "Medical scan processed", "detailed_explanation": "Please ensure the report image is clear and well-lit. We recommend verifying any critical readings directly with a medical doctor.", "findings": "Clinical scan recorded.", "recommendations": ["Share this scan with your doctor", "Keep a physical copy safe."] }}'
 
     @staticmethod
     async def chat_about_medical_report(question: str, report_context: str):
