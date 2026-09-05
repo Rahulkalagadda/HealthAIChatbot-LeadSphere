@@ -277,40 +277,64 @@ const Landing: React.FC = () => {
 
       {/* District Health Monitoring Section */}
       <section className="py-20 px-4 md:px-6 bg-[#F8FAFC]">
-        <div className="max-w-7xl mx-auto space-y-8">
+        <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-2">
              <span className="text-[10px] font-black uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full border border-rose-100">Public Health Shield</span>
              <h2 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900">
                Community & District <span className="text-rose-600 underline decoration-rose-200 decoration-4">Health Protection</span>
              </h2>
-                  </div>
-                </div>
-              ))}
-            </div>
+             <p className="text-sm md:text-base text-slate-500 font-medium">
+               Anonymous health analytics alerting authorities to localized disease outbreaks before they spread.
+             </p>
           </div>
-          
-          <div className="lg:col-span-7">
-             <div className="bg-white p-10 rounded-[64px] shadow-2xl shadow-slate-200 border-[16px] border-slate-50 relative group">
-                <div className="aspect-video bg-slate-100 rounded-[40px] overflow-hidden relative shadow-inner">
-                   <img src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&w=1200&q=80" className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" alt="Map View" />
-                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                      <div className="w-32 h-32 bg-rose-600/20 rounded-full border-4 border-rose-600 animate-pulse flex items-center justify-center relative">
-                         <div className="absolute inset-0 bg-rose-600/40 rounded-full blur-2xl"></div>
-                         <span className="bg-rose-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-2xl relative z-10 whitespace-nowrap">VIRAL CLUSTER DETECTED</span>
-                      </div>
-                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-8 mt-10">
-                   <div className="bg-emerald-50 p-6 rounded-[32px] border border-emerald-100">
-                      <p className="text-[10px] font-black uppercase text-emerald-600 tracking-[0.2em] mb-2">Hospital Capacity</p>
-                      <p className="text-4xl font-black text-slate-800 font-headline tracking-tighter italic">98% <TrendingUp className="inline w-6 h-6 ml-2" /></p>
-                   </div>
-                   <div className="bg-blue-50 p-6 rounded-[32px] border border-blue-100">
-                      <p className="text-[10px] font-black uppercase text-blue-600 tracking-[0.2em] mb-2">Villages Monitored</p>
-                      <p className="text-4xl font-black text-slate-800 font-headline tracking-tighter italic">1,240</p>
-                   </div>
-                </div>
-             </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-5 space-y-6">
+              <p className="text-base text-slate-600 font-medium leading-relaxed">
+                Every consultation and report analysis anonymously contributes to an early-warning map that alerts district officers to sudden viral clusters.
+              </p>
+              
+              <div className="space-y-4">
+                {[
+                  { label: "Predictive Analytics", desc: "AI forecasts seasonal spikes like Dengue, Malaria, or Viral Fever weeks in advance.", icon: Sparkles },
+                  { label: "Emergency Broadcasting", desc: "Instant SMS and WhatsApp broadcasts to at-risk panchayats during heatwaves or water contamination.", icon: Globe }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4 p-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all group">
+                    <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <item.icon className="w-6 h-6 stroke-[2]" />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-bold text-slate-900">{item.label}</h4>
+                      <p className="text-xs text-slate-500 font-medium leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="lg:col-span-7">
+               <div className="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200/80 relative group">
+                  <div className="aspect-video bg-slate-100 rounded-2xl overflow-hidden relative shadow-inner">
+                     <img src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&w=1200&q=80" className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" alt="Map View" />
+                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                        <div className="w-28 h-28 bg-rose-600/20 rounded-full border-4 border-rose-600 animate-pulse flex items-center justify-center relative">
+                           <div className="absolute inset-0 bg-rose-600/40 rounded-full blur-xl"></div>
+                           <span className="bg-rose-600 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-xl relative z-10 whitespace-nowrap">VIRAL CLUSTER DETECTED</span>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mt-6">
+                     <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                        <p className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider mb-1">Hospital Capacity</p>
+                        <p className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-1.5">98% <TrendingUp className="w-5 h-5 text-emerald-600" /></p>
+                     </div>
+                     <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                        <p className="text-[10px] font-bold uppercase text-blue-700 tracking-wider mb-1">Villages Monitored</p>
+                        <p className="text-2xl font-black text-slate-900 tracking-tight">1,240</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
           </div>
         </div>
       </section>
@@ -418,6 +442,8 @@ const Landing: React.FC = () => {
               </div>
            </div>
         </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-slate-200 bg-white">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
