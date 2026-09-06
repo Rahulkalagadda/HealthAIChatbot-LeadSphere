@@ -60,8 +60,8 @@ const Login: React.FC = () => {
         </Link>
         
         <div className="relative z-10 space-y-8 animate-in slide-in-from-left-10 duration-1000">
-          <div className="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-3xl flex items-center justify-center border border-white/20 shadow-2xl">
-            <Heart className="w-12 h-12 fill-white/20" strokeWidth={2.5} />
+          <div className="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-3xl flex items-center justify-center border border-white/20 shadow-2xl p-2.5">
+            <img src="/app-icon.png" alt="SevaSetu AI" className="w-full h-full object-contain rounded-2xl" />
           </div>
           
           <div className="space-y-4">
@@ -100,6 +100,9 @@ const Login: React.FC = () => {
       <div className="flex-1 flex items-center justify-center p-8 relative">
         <div className="w-full max-w-md space-y-12 animate-in zoom-in-95 duration-700">
            <div className="text-center md:text-left space-y-4">
+              <div className="md:hidden flex justify-center mb-2">
+                <img src="/app-icon.png" alt="SevaSetu AI" className="w-14 h-14 rounded-2xl object-contain shadow-md" />
+              </div>
               <h2 className="text-4xl font-black tracking-tighter text-slate-800 uppercase italic">Member Sign-In</h2>
               <p className="text-slate-400 font-bold">Please provide your credentials below.</p>
            </div>

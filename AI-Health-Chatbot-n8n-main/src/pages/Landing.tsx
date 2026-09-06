@@ -54,9 +54,11 @@ const Landing: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="bg-white/70 backdrop-blur-2xl border border-white/20 rounded-[32px] px-8 py-4 flex items-center justify-between shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] transition-all hover:bg-white/80">
             <div className="flex items-center gap-3 group cursor-pointer">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-100 group-hover:rotate-6 transition-transform">
-                <Heart className="w-7 h-7 fill-white/20" strokeWidth={2.5} />
-              </div>
+              <img 
+                src="/app-icon.png" 
+                alt="SevaSetu AI" 
+                className="w-12 h-12 rounded-2xl object-contain shadow-lg shadow-blue-100 group-hover:scale-105 transition-transform" 
+              />
               <span className="text-2xl font-black tracking-tighter text-slate-800">SevaSetu<span className="text-blue-600 italic">AI</span></span>
             </div>
             
@@ -450,9 +452,11 @@ const Landing: React.FC = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20">
-                <Heart className="w-5 h-5 fill-white/20" />
-              </div>
+              <img 
+                src="/app-icon.png" 
+                alt="SevaSetu AI" 
+                className="w-9 h-9 rounded-xl object-contain shadow-md shadow-blue-500/20" 
+              />
               <span className="text-xl font-black tracking-tight text-slate-900">SevaSetu AI</span>
             </div>
             <p className="max-w-md text-sm font-medium text-slate-500 leading-relaxed">

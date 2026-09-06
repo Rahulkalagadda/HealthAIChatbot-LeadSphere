@@ -123,12 +123,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <header className={`fixed ${isOffline ? 'top-8' : 'top-0'} w-full z-[200] bg-white/80 backdrop-blur-xl border-b border-slate-200/60 h-16 md:h-20 lg:h-16 shadow-sm transition-all`}>
         <div className="max-w-[1600px] mx-auto h-full px-4 md:px-8 flex items-center justify-between gap-8">
           <Link to="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-100 group-hover:rotate-6 transition-transform">
-              <Heart className="w-6 h-6 md:w-7 md:h-7 fill-white/20" strokeWidth={2.5} />
-            </div>
+            <img 
+              src="/app-icon.png" 
+              alt="SevaSetu AI" 
+              className="w-10 h-10 md:w-11 md:h-11 rounded-xl object-contain shadow-sm group-hover:scale-105 transition-transform" 
+            />
             <div className="flex flex-col">
-              <span className="text-lg md:text-2xl font-black tracking-tighter text-slate-800 leading-none">{t("app.name").split(" ")[0]}<span className="text-blue-600 italic">{t("app.name").split(" ")[1]}</span></span>
-              <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">{t("app.tagline")}</span>
+              <span className="text-lg md:text-2xl font-black tracking-tight text-slate-900 leading-none">
+                {t("app.name").split(" ")[0]}<span className="text-blue-600 italic">{t("app.name").split(" ")[1]}</span>
+              </span>
+              <span className="text-[9px] md:text-[10px] font-semibold text-slate-400 tracking-wider mt-0.5">{t("app.tagline")}</span>
             </div>
           </Link>
 
@@ -178,11 +182,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   
                   {(searchResults.schemes.length > 0) && (
                     <div className="space-y-2">
-                      <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest px-2 group flex items-center gap-1.5"><Zap className="w-3 h-3" /> Health Schemes</p>
-                      {searchResults.schemes.map((s: any, idx: number) => (
-                        <Link key={idx} to={`/scheme/${encodeURIComponent(s.name)}`} className="block p-3 hover:bg-orange-50 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-orange-100">
-                          <p className="font-bold text-sm text-slate-800">{s.name}</p>
-                          <p className="text-[11px] text-slate-500 font-medium">{s.desc || s.benefits}</p>
+                      <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest px-2 group flex items-center gap-1.5"><ShieldCheck className="w-3 h-3" /> Health Schemes</p>
+                      {searchResults.schemes.map((s: any) => (
+                        <Link key={s.id} to={`/scheme/${encodeURIComponent(s.title)}`} className="block p-3 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-slate-100">
+                          <p className="font-bold text-sm text-slate-800">{s.title}</p>
+                          <p className="text-[11px] text-slate-500 font-medium line-clamp-1">{s.description}</p>
                         </Link>
                       ))}
                     </div>
@@ -204,105 +208,229 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             )}
           </div>
 
-          <div className="flex items-center gap-2 md:gap-3">
-            {/* Language Selection */}
-            <div className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-[14px]">
+          {/* Right Header Navigation Elements */}
+          <div className="flex items-center gap-3 md:gap-5">
+            {/* Language Switcher Pill */}
+            <div className="hidden sm:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/60">
+              <Globe className="w-3.5 h-3.5 text-slate-400 ml-2 mr-1" />
               {(['en', 'hi', 'te', 'or'] as const).map((lang) => (
-                <button 
+                <button
                   key={lang}
                   onClick={() => setLanguage(lang)}
-                  className={`px-3 py-1.5 rounded-[10px] text-[10px] font-black uppercase tracking-widest transition-all ${
+                  className={`px-2 py-1 rounded-lg text-xs font-bold transition-all uppercase ${
                     language === lang 
-                      ? "bg-white text-blue-600 shadow-md" 
-                      : "text-slate-400 hover:text-slate-600"
+                      ? "bg-white text-blue-600 shadow-sm" 
+                      : "text-slate-400 hover:text-slate-700"
                   }`}
                 >
                   {lang}
                 </button>
               ))}
             </div>
-            
-            {installPrompt && !isInstalled && (
-              <button 
-                onClick={handleInstall}
-                className="hidden md:flex items-center gap-2 p-2 px-3 bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all rounded-xl border border-blue-100 active:scale-95 shadow-sm"
-              >
-                <DownloadCloud className="w-5 h-5" />
-                <span className="text-[10px] font-black uppercase tracking-widest">{t("nav.install")}</span>
-              </button>
-            )}
-            
-            <Link to="/notifications" className="p-2.5 hover:bg-slate-50 text-slate-600 transition-all rounded-xl relative border border-transparent hover:border-slate-200 active:scale-90 shadow-sm md:shadow-none">
+
+            {/* Offline Pocketbook Button */}
+            <Link 
+              to="/offline-first-aid" 
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:text-red-600 hover:bg-red-50 border border-slate-200/80 transition-all shadow-sm"
+              title="100% Offline Emergency First-Aid"
+            >
+              <WifiOff className="w-3.5 h-3.5 text-red-500" />
+              <span className="hidden md:inline">Offline Aid</span>
+            </Link>
+
+            {/* Notifications Bell */}
+            <Link to="/notifications" className="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors">
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-2.5 right-2.5 w-4 h-4 bg-red-500 rounded-full border-2 border-white flex items-center justify-center text-[8px] font-black text-white">
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white rounded-full text-[10px] font-black flex items-center justify-center animate-pulse">
                   {unreadCount}
                 </span>
               )}
             </Link>
-            
-            <Link to="/profile" className="flex items-center gap-3 p-1.5 pr-4 hover:bg-slate-50 transition-all rounded-xl border border-transparent hover:border-slate-200 active:scale-95 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center border border-indigo-100 group-hover:bg-blue-600 group-hover:border-blue-600 transition-all">
-                <User className="text-indigo-600 w-5 h-5 group-hover:text-white transition-colors" />
-              </div>
-              <div className="hidden sm:flex flex-col items-start leading-none ml-1">
-                <span className="text-[13px] font-bold text-slate-700">{user?.name || "Ramesh K."}</span>
-                <span className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tighter">{user?.role === 'admin' ? 'Admin Access' : t("ui.gold.member")}</span>
-              </div>
-            </Link>
 
-            {/* Mobile Menu Toggle */}
+            {/* Profile Avatar & Menu */}
+            <div className="flex items-center gap-3 pl-2 border-l border-slate-200">
+              <Link to="/profile" className="flex items-center gap-2.5 p-1 rounded-xl hover:bg-slate-50 transition-colors">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm border border-blue-100 shadow-sm">
+                  {user?.name ? user.name[0].toUpperCase() : <User className="w-4 h-4" />}
+                </div>
+              </Link>
+            </div>
+
+            {/* Mobile Hamburger Toggle Button */}
             <button 
-              onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 hover:bg-slate-50 text-slate-600 transition-all rounded-xl border border-transparent hover:border-slate-200 active:scale-95"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
+              aria-label="Open Mobile Menu"
             >
-              <Menu className="w-6 h-6" />
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay with Support & Care Section */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[300] bg-white flex flex-col p-8 animate-in fade-in duration-300">
-          <div className="flex items-center justify-between mb-12">
+        <div className="md:hidden fixed inset-0 z-[300] bg-white flex flex-col p-6 overflow-y-auto animate-in fade-in duration-300">
+          {/* Mobile Drawer Top Bar */}
+          <div className="flex items-center justify-between pb-5 border-b border-slate-100">
             <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white">
-                <Heart className="w-6 h-6 fill-white/20" />
+              <img 
+                src="/app-icon.png" 
+                alt="SevaSetu AI" 
+                className="w-10 h-10 rounded-xl object-contain shadow-sm" 
+              />
+              <div className="flex flex-col">
+                <span className="text-lg font-black tracking-tight text-slate-900">{t("app.name")}</span>
+                <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">{t("app.tagline")}</span>
               </div>
-              <span className="text-xl font-black">{t("app.name")}</span>
             </Link>
-            <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-slate-400">
-              <X className="w-8 h-8" />
+            <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-xl">
+              <X className="w-6 h-6" />
             </button>
           </div>
           
-          <div className="flex flex-col gap-6">
-            {navItems.map((item) => (
-              <Link key={item.path} to={item.path} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 text-2xl font-black text-slate-800 uppercase tracking-tighter italic hover:text-blue-600 transition-colors">
-                <item.icon className="w-7 h-7" />
-                {item.name}
-              </Link>
-            ))}
-            
-            {installPrompt && !isInstalled && (
-              <button 
-                onClick={() => { handleInstall(); setMobileMenuOpen(false); }}
-                className="flex items-center gap-4 text-2xl font-black text-blue-600 uppercase tracking-tighter italic"
+          <div className="py-4 space-y-6">
+            {/* Section 1: Main Menu */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] px-2 mb-2">{t("ui.main.menu")}</p>
+              {navItems.map((item) => (
+                <Link 
+                  key={item.path} 
+                  to={item.path} 
+                  onClick={() => setMobileMenuOpen(false)} 
+                  className={`flex items-center justify-between p-3 rounded-xl transition-all ${
+                    isActive(item.path) 
+                      ? "bg-blue-600 text-white font-bold shadow-md shadow-blue-500/20" 
+                      : "text-slate-700 hover:bg-slate-50 font-semibold"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <item.icon className="w-5 h-5" />
+                    <span className="text-sm">{item.name}</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 opacity-50" />
+                </Link>
+              ))}
+            </div>
+
+            {/* Section 2: Support & Care (Now Fully Displayed on Mobile!) */}
+            <div className="space-y-1 pt-3 border-t border-slate-100">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] px-2 mb-2">{t("ui.support.care")}</p>
+              
+              {/* 100% Offline Pocketbook */}
+              <Link 
+                to="/offline-first-aid" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-red-50 text-slate-700 hover:text-red-700 transition-colors font-semibold"
               >
-                <DownloadCloud className="w-7 h-7" />
-                {t("nav.install")}
-              </button>
-            )}
+                <div className="flex items-center gap-3">
+                  <WifiOff className="w-5 h-5 text-red-500" />
+                  <span className="text-sm">Offline First-Aid Pocketbook</span>
+                </div>
+                <span className="text-[9px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  100% Offline
+                </span>
+              </Link>
+
+              {/* Language Settings */}
+              <Link 
+                to="/language" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-blue-50 text-slate-700 hover:text-blue-600 transition-colors font-semibold"
+              >
+                <div className="flex items-center gap-3">
+                  <Languages className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm">{t("nav.language")}</span>
+                </div>
+                <span className="text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-md uppercase font-mono">
+                  {language}
+                </span>
+              </Link>
+
+              {/* Health Profile */}
+              <Link 
+                to="/profile" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 transition-colors font-semibold"
+              >
+                <div className="flex items-center gap-3">
+                  <Settings className="w-5 h-5 text-slate-500" />
+                  <span className="text-sm">{t("nav.settings")}</span>
+                </div>
+                <ChevronRight className="w-4 h-4 opacity-50" />
+              </Link>
+
+              {/* Helplines & Help */}
+              <Link 
+                to="/helplines" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 transition-colors font-semibold"
+              >
+                <div className="flex items-center gap-3">
+                  <HelpCircle className="w-5 h-5 text-slate-500" />
+                  <span className="text-sm">{t("nav.help")}</span>
+                </div>
+                <ChevronRight className="w-4 h-4 opacity-50" />
+              </Link>
+
+              {/* PWA Install Button */}
+              {installPrompt && !isInstalled && (
+                <button 
+                  onClick={() => { handleInstall(); setMobileMenuOpen(false); }}
+                  className="flex items-center justify-between w-full p-3 rounded-xl text-blue-600 hover:bg-blue-50 transition-colors font-bold text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <DownloadCloud className="w-5 h-5" />
+                    <span className="text-sm">{t("nav.install")}</span>
+                  </div>
+                  <span className="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">PWA</span>
+                </button>
+              )}
+            </div>
+
+            {/* Emergency 108 Card in Mobile Menu */}
+            <div className="p-4 bg-gradient-to-r from-red-500 to-rose-600 rounded-2xl text-white flex items-center justify-between shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white">
+                  <PhoneCall className="w-5 h-5 animate-pulse" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold leading-none">{t("ui.emergency")}</p>
+                  <p className="text-[10px] text-red-100 font-medium mt-1">National Ambulance Service</p>
+                </div>
+              </div>
+              <a 
+                href="tel:108" 
+                className="bg-white text-red-600 font-black px-4 py-2 rounded-xl text-xs shadow-sm active:scale-95 transition-all hover:bg-red-50"
+              >
+                Call 108
+              </a>
+            </div>
           </div>
           
-          <div className="mt-auto flex flex-col gap-4 border-t border-slate-100 pt-8">
-             <div className="flex items-center gap-6">
+          {/* Drawer Bottom Language Selector & Signout */}
+          <div className="mt-auto pt-4 border-t border-slate-100 flex flex-col gap-3">
+             <div className="flex items-center justify-between bg-slate-50 p-1.5 rounded-xl border border-slate-200/60">
                {(['en', 'hi', 'te', 'or'] as const).map((lang) => (
-                 <button key={lang} onClick={() => { setLanguage(lang); setMobileMenuOpen(false); }} className={`text-xl font-black uppercase ${language === lang ? 'text-blue-600 underline decoration-4' : 'text-slate-400'}`}>{lang}</button>
+                 <button 
+                   key={lang} 
+                   onClick={() => { setLanguage(lang); setMobileMenuOpen(false); }} 
+                   className={`flex-1 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
+                     language === lang ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'
+                   }`}
+                 >
+                   {lang}
+                 </button>
                ))}
              </div>
-             <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="text-left text-xl font-black text-red-600 uppercase tracking-tighter italic">Sign Out Hub</button>
+             <button 
+               onClick={() => { logout(); setMobileMenuOpen(false); }} 
+               className="flex items-center gap-2 p-2 text-slate-400 hover:text-red-600 text-xs font-bold transition-colors"
+             >
+               <LogOut className="w-4 h-4" />
+               <span>Sign Out Account</span>
+             </button>
           </div>
         </div>
       )}
