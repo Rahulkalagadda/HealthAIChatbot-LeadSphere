@@ -33,7 +33,21 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       await login(email, password);
-      const from = (location.state as any)?.from?.pathname || "/";
+      const from = (location.state as any)?.from?.pathname || "/chat";
+      navigate(from, { replace: true });
+    } catch (e) {
+      // Error handled in login service
+    }
+  };
+
+  const handleOneClickLogin = async () => {
+    const demoEmail = "admin@sevasetu.in";
+    const demoPassword = "Admin@123";
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    try {
+      await login(demoEmail, demoPassword);
+      const from = (location.state as any)?.from?.pathname || "/chat";
       navigate(from, { replace: true });
     } catch (e) {
       // Error handled in login service
@@ -105,6 +119,35 @@ const Login: React.FC = () => {
               </div>
               <h2 className="text-4xl font-black tracking-tighter text-slate-800 uppercase italic">Member Sign-In</h2>
               <p className="text-slate-400 font-bold">Please provide your credentials below.</p>
+           </div>
+
+           {/* Instant Demo Credentials Card */}
+           <div className="bg-[#EEF2FF] border-2 border-[#C7D2FE] rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4 shadow-sm transition-all hover:border-[#818CF8]">
+             <div className="flex items-center gap-3.5">
+               <div className="w-12 h-12 rounded-xl bg-[#4F46E5] flex items-center justify-center text-white shrink-0 shadow-sm">
+                 <Sparkles className="w-6 h-6 text-amber-300" />
+               </div>
+               <div className="space-y-0.5 text-left">
+                 <p className="text-xs font-black uppercase tracking-wider text-slate-900">
+                   INSTANT DEMO CREDENTIALS
+                 </p>
+                 <p className="text-xs sm:text-sm font-semibold text-slate-600">
+                   Email: <span className="font-mono text-[#4F46E5] font-bold select-all">admin@sevasetu.in</span>
+                 </p>
+                 <p className="text-xs sm:text-sm font-semibold text-slate-600">
+                   Password: <span className="font-mono text-[#4F46E5] font-bold select-all">Admin@123</span>
+                 </p>
+               </div>
+             </div>
+
+             <button
+               type="button"
+               onClick={handleOneClickLogin}
+               disabled={isLoading}
+               className="bg-[#4F46E5] hover:bg-[#4338CA] active:bg-[#3730A3] text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all shrink-0 flex items-center justify-center gap-1.5"
+             >
+               {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "1–Click Login"}
+             </button>
            </div>
            
            <form onSubmit={handleLogin} className="space-y-8">

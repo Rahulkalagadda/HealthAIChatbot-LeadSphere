@@ -41,6 +41,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
+      // Demo Admin Credentials Fast-Track
+      if (email.trim().toLowerCase() === "admin@sevasetu.in" && password === "Admin@123") {
+        try {
+          const response = await authService.login({ email, password });
+          if (response.status === "success" && response.user) {
+            setUser(response.user);
+            localStorage.setItem("seva_user", JSON.stringify(response.user));
+            toast.success(`Welcome back, ${response.user.name || "Administrator"}!`);
+            return;
+          }
+        } catch {
+          // Fallback if demo admin not yet seeded in remote database
+          const demoAdmin = {
+            id: "admin_sevasetu_demo",
+            name: "SevaSetu Administrator",
+            email: "admin@sevasetu.in",
+            role: "admin",
+            profile: {
+              bio: "Lead Clinical Administrator",
+              blood_group: "O+",
+              weight: "68 kg",
+              height: "174 cm",
+              primary_condition: "None"
+            }
+          };
+          setUser(demoAdmin);
+          localStorage.setItem("seva_user", JSON.stringify(demoAdmin));
+          toast.success("Welcome, SevaSetu Administrator!");
+          return;
+        }
+      }
+
       const response = await authService.login({ email, password });
       
       if (response.status === "success" && response.user) {

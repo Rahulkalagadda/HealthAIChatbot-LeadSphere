@@ -1,192 +1,227 @@
-# 🏥 SevaSetu AI Health Assistant
+# SevaSetu AI - Healthcare Access Platform
 
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/Frontend-React_18-61DAFB.svg?style=flat&logo=react)](https://reactjs.org)
-[![Vite](https://img.shields.io/badge/Build-Vite-646CFF.svg?style=flat&logo=vite)](https://vitejs.dev)
-[![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6.svg?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![Python](https://img.shields.io/badge/Language-Python_3.11-3776AB.svg?style=flat&logo=python)](https://python.org)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL_(Supabase)-336791.svg?style=flat&logo=postgresql)](https://supabase.com)
-[![Groq](https://img.shields.io/badge/AI_Inference-Groq_Cloud-F05A28.svg?style=flat)](https://groq.com)
-[![Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E.svg?style=flat&logo=railway)](https://railway.com)
-[![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000.svg?style=flat&logo=vercel)](https://vercel.com)
+<p align="center">
+  <img src="assets/sevasetu-logo.png" alt="SevaSetu AI - Smarter Care, Happier Patients, Stronger Clinics" width="540" />
+</p>
 
-**SevaSetu AI** is an intelligent, rural-friendly healthcare platform engineered to bridge healthcare accessibility gaps across India. Featuring real-time multilingual voice interaction, AI medical report comprehension, regional emergency services, and automated government health scheme navigation (PM-JAY, BSKY).
+<p align="center">
+  <strong>Democratizing Clinical Guidance, Scheme Eligibility, and Emergency Preparedness for Bharat</strong>
+</p>
 
----
-
-## 🌟 Key Features
-
-- **🎙️ Multilingual Voice Assistant**: Full speech-to-text (STT) and voice synthesis (TTS) support in **English**, **Hindi (हिन्दी)**, and **Odia (ଓଡ଼ିଆ)**.
-- **📄 AI Medical Report Analysis**: Upload prescriptions or lab reports for instant OCR extraction, abnormality highlights, and plain-language summaries.
-- **🏛️ Government Schemes Navigator**: Vector-search RAG engine matching citizens to eligible state and central healthcare schemes.
-- **🏥 Healthcare Directory**: Find hospitals, community health centers (CHCs), primary health centers (PHCs), and emergency ambulance contacts.
-- **📅 Appointment Booking**: Seamless scheduling with local facilities and doctors.
-- **🔒 Secure & Scalable Architecture**: Powered by FastAPI, PostgreSQL (via Supabase), and Groq ultra-low latency LLM inference.
+<p align="center">
+  <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi" alt="FastAPI" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/Frontend-React_18-61DAFB.svg?style=flat&logo=react" alt="React" /></a>
+  <a href="https://vitejs.dev"><img src="https://img.shields.io/badge/Build-Vite-646CFF.svg?style=flat&logo=vite" alt="Vite" /></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/Language-TypeScript-3178C6.svg?style=flat&logo=typescript" alt="TypeScript" /></a>
+  <a href="https://python.org"><img src="https://img.shields.io/badge/Language-Python_3.11-3776AB.svg?style=flat&logo=python" alt="Python" /></a>
+  <a href="https://supabase.com"><img src="https://img.shields.io/badge/Database-PostgreSQL_(Supabase)-336791.svg?style=flat&logo=postgresql" alt="PostgreSQL" /></a>
+  <a href="https://qdrant.tech"><img src="https://img.shields.io/badge/Vector_DB-Qdrant_Cloud-DC2626.svg?style=flat" alt="Qdrant" /></a>
+  <a href="https://groq.com"><img src="https://img.shields.io/badge/Inference-Groq_LPU-F05A28.svg?style=flat" alt="Groq" /></a>
+  <a href="https://railway.com"><img src="https://img.shields.io/badge/Deploy-Railway-0B0D0E.svg?style=flat&logo=railway" alt="Railway" /></a>
+  <a href="https://vercel.com"><img src="https://img.shields.io/badge/Deploy-Vercel-000000.svg?style=flat&logo=vercel" alt="Vercel" /></a>
+</p>
 
 ---
 
-## 🏗️ System Architecture
+## Executive Summary
+
+**SevaSetu AI** is an intelligent, low-bandwidth healthcare platform designed to bridge medical access disparities in rural and semi-urban India. Built with a dual-experience architecture (executive clinical SaaS on desktop and a high-performance Progressive Web App on mobile), the platform provides real-time multilingual voice triage, AI-driven medical report analysis, an interactive government welfare eligibility calculator, and a 100% offline emergency first-aid pocketbook.
+
+---
+
+## Key Capabilities
+
+- **Multilingual Voice & Chat Triage**: Real-time clinical guidance with automatic language switching across English, Hindi (हिन्दी), Telugu (తెలుగు), and Odia (ଓଡ଼ିଆ), supporting bidirectional speech-to-text (STT) and speech synthesis (TTS).
+- **Medical Report & Lab Analysis**: Client-side image compression (<500 KB Canvas pipeline in ~50 ms) paired with Vision OCR and LLM-driven interpretation, generating plain-language health metrics and flagged parameters.
+- **Smart Government Scheme Eligibility Wizard**: 3-step interactive assessment calculating instant qualification for Ayushman Bharat (PM-JAY), BSKY, Aarogyasri, MJPJAY, and specialized maternal schemes.
+- **100% Offline Emergency First-Aid Pocketbook**: Standalone, network-independent emergency protocols (snakebites, heatstroke, severe burns, poisoning, CPR) with direct cellular telephone dialers for National Ambulance (108) and Health Help (104).
+- **Clinical Outpatient & Telemedicine Scheduling**: Appointment booking engine supporting both in-person visits (PHC, CHC, District Civil Hospital) and virtual telemedicine with Ayushman ABHA fast-track queue tokens.
+- **District Health Knowledge Hub**: Community health library with real-time disease vigilance advisories, vaccination timetables, hygiene guidelines, and downloadable regional resources.
+- **Spotlight Command Palette**: Global keyboard-driven search (`Ctrl + K` / `Cmd + K`) for instant navigation across medical terms, doctor profiles, and emergency workflows.
+
+---
+
+## System Architecture
 
 ```mermaid
 graph TD
-    User([Citizen / User]) -->|Interacts via Voice/Text| Frontend[React + Vite Frontend (Vercel)]
-    Frontend -->|REST API Requests| Backend[FastAPI Backend (Railway)]
+    User([Citizen / Healthcare Worker]) -->|Interacts via Voice, Chat, or Upload| Client[React 18 PWA + Vite (Vercel)]
+    Client -->|Client-Side Compression| CanvasEngine[HTML5 Canvas Pipeline (<500KB)]
+    CanvasEngine -->|Compressed Payload| APIGateway[FastAPI Gateway (Railway)]
     
-    Backend -->|LLM Chat & Analysis| Groq[Groq API (openai/gpt-oss-120b)]
-    Backend -->|Persist Users, History & Schemes| DB[(Supabase PostgreSQL)]
-    Backend -->|Store Medical Reports & Images| Cloudinary[(Cloudinary Storage)]
-    Backend -->|Extract Text from Reports| Tesseract[Tesseract OCR]
-    Backend -->|RAG Scheme Retrieval| FAISS[FAISS Vector Index]
+    APIGateway -->|Clinical Reasoning & Triage| GroqLLM[Groq LPU Cloud (LLaMA-3.3-70B / Scout-17B)]
+    APIGateway -->|Hybrid Semantic Search| Qdrant[Qdrant Cloud Vector Cluster]
+    APIGateway -->|Relational Data & Auth| Supabase[(Supabase PostgreSQL Pooler)]
+    APIGateway -->|Secure Medical Records| Cloudinary[(Cloudinary Encrypted Storage)]
+    
+    Client -.->|Zero-Network Fallback| ServiceWorker[PWA Service Worker Cache (sevasetu-v3)]
+    ServiceWorker -.->|Offline Life-Saving Protocols| LocalPocketbook[(Offline First-Aid Database)]
 ```
 
 ---
 
-## 📁 Repository Structure
+## Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend Web & PWA** | React 18, TypeScript, Vite, Tailwind CSS, Lucide Icons, Service Worker API |
+| **Backend API** | FastAPI (Python 3.11), Pydantic v2, Uvicorn, SQLAlchemy |
+| **AI Inference** | Groq Cloud LPU (`llama-3.3-70b-versatile`, `meta-llama/llama-4-scout-17b-16e-instruct`) |
+| **Vector Database & RAG** | Qdrant Cloud Cluster (Dense embeddings + Keyword token boosting) |
+| **Primary Database** | PostgreSQL 15 via Supabase Session Pooler |
+| **Document Storage** | Cloudinary CDN with signed access tokens |
+| **Infrastructure & Hosting** | Vercel (Edge CDN Frontend), Railway (Containerized Backend) |
+
+---
+
+## Repository Structure
 
 ```text
 Health-AIChatbot/
-├── AI-Health-Chatbot-n8n-main/    # Frontend Application
-│   ├── public/                     # Static assets
+├── assets/                         # Production brand identity and vector logos
+│   ├── sevasetu-icon.png           # Master square application icon
+│   └── sevasetu-logo.png           # Master horizontal brand logo
+│
+├── AI-Health-Chatbot-n8n-main/    # Frontend Application (React + Vite)
+│   ├── public/                     # PWA manifest, service worker (sw.js), icons
 │   ├── src/
-│   │   ├── components/             # UI Components (shadcn/ui, layouts)
-│   │   ├── contexts/               # Auth, Language, Theme contexts
-│   │   ├── hooks/                  # Voice recognition & synthesis hooks
-│   │   ├── pages/                  # Chat, Reports, Directory, Schemes
-│   │   └── services/               # API clients (chat, reports, auth)
-│   ├── .env.example                # Frontend environment template
-│   ├── .env.production             # Frontend production configuration
+│   │   ├── components/             # Reusable UI components & layouts
+│   │   ├── contexts/               # Auth, Language, Notification, Theme contexts
+│   │   ├── data/                   # Offline first-aid protocols & scheme datasets
+│   │   ├── hooks/                  # Voice synthesis, recognition, PWA install hooks
+│   │   ├── pages/                  # Chat, Reports, Schemes, Appointments, Health Hub
+│   │   ├── services/               # API clients (analysis, schemes, appointments)
+│   │   └── utils/                  # Client-side canvas image compressor
+│   ├── index.html                  # HTML entry point with PWA meta tags
 │   ├── package.json
-│   ├── tailwind.config.ts
 │   └── vite.config.ts
 │
-├── backend/                        # Backend Application
+├── backend/                        # Backend Application (FastAPI)
 │   ├── alembic/                    # Database migration scripts
 │   ├── app/
-│   │   ├── config/                 # DB engine & Pydantic settings
-│   │   ├── models/                 # SQLAlchemy ORM models
-│   │   ├── routes/                 # FastAPI routers (chat, analysis, etc.)
-│   │   ├── services/               # AI (Groq), RAG (FAISS), Storage services
-│   │   └── utils/                  # JWT security & helper utilities
-│   ├── .env.example                # Backend environment template
-│   ├── .env.production             # Backend production configuration
-│   ├── create_db.sql               # PostgreSQL / MySQL DDL schema
-│   ├── Dockerfile                  # Container definition for cloud deploy
-│   ├── Procfile                    # Railway / Render start process
-│   └── requirements.txt            # Python package dependencies
+│   │   ├── config/                 # Pydantic environment settings & DB engine
+│   │   ├── models/                 # SQLAlchemy ORM models (User, Report, etc.)
+│   │   ├── routes/                 # API endpoints (chat, analysis, schemes, appointments)
+│   │   ├── services/               # Groq AI, Qdrant vector, and Cloudinary integrations
+│   │   └── utils/                  # JWT security and authentication helpers
+│   ├── Dockerfile                  # Container definition for production deployment
+│   ├── Procfile                    # Railway start process configuration
+│   └── requirements.txt            # Python dependencies
 │
-└── README.md                       # Project documentation
+└── README.md                       # Repository documentation
 ```
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Configuration
 
-### Backend (`backend/.env`)
+### Backend Configuration (`backend/.env`)
 
 ```env
-# Core App Settings
-APP_NAME="SevaSetu AI Health Chatbot"
+# Application Settings
+APP_NAME="SevaSetu AI Health Assistant"
 DEBUG=False
 ALLOWED_ORIGINS="https://*.vercel.app,http://localhost:5173,http://localhost:8080"
 
-# Supabase PostgreSQL (Session Pooler)
+# Database Connection (Supabase PostgreSQL)
 DATABASE_URL="postgresql+psycopg2://<user>:<password>@<host>:5432/postgres?sslmode=require"
 
-# Groq Cloud AI
+# Groq AI Inference
 GROQ_API_KEY="gsk_your_groq_api_key"
-AI_MODEL="openai/gpt-oss-120b"
+AI_MODEL="llama-3.3-70b-versatile"
 VISION_MODEL="meta-llama/llama-4-scout-17b-16e-instruct"
 
-# Cloudinary (Medical document storage)
+# Qdrant Cloud Vector Database
+QDRANT_URL="https://your-cluster.qdrant.tech:6333"
+QDRANT_API_KEY="your_qdrant_api_key"
+
+# Cloudinary Storage
 CLOUDINARY_CLOUD_NAME="your_cloud_name"
 CLOUDINARY_API_KEY="your_api_key"
 CLOUDINARY_API_SECRET="your_api_secret"
 
-# JWT Security
+# JWT Authentication
 SECRET_KEY="your-secure-random-secret-key"
 ALGORITHM="HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 ```
 
-### Frontend (`AI-Health-Chatbot-n8n-main/.env`)
+### Frontend Configuration (`AI-Health-Chatbot-n8n-main/.env`)
 
 ```env
-# Points to the FastAPI backend API prefix
-VITE_API_BASE_URL="http://localhost:8000/api"
+# Production FastAPI Gateway URL
+VITE_API_BASE_URL="https://healthaichatbot-leadsphere-production-0990.up.railway.app/api"
 ```
 
 ---
 
-## 🚀 Deployment Guide
+## Local Development Setup
 
-### 1. Deploy Backend on Railway
-
-1. Push your repository to **GitHub**.
-2. Go to [Railway Dashboard](https://railway.com) and create a **New Project > Deploy from GitHub repo**.
-3. Under **Settings**:
-   - Set **Root Directory** to `/backend`.
-4. Under **Variables**:
-   - Add all environment variables from `backend/.env.production`.
-5. Under **Settings > Networking**:
-   - Click **Generate Domain** (e.g. `https://sevasetu-api.up.railway.app`).
-6. Verify deployment by visiting `https://<YOUR-RAILWAY-URL>/` (returns `{"status": "ok"}`).
-
----
-
-### 2. Deploy Frontend on Vercel
-
-1. Go to [Vercel Dashboard](https://vercel.com) and import your GitHub repository.
-2. Configure project settings:
-   - **Root Directory**: Select `AI-Health-Chatbot-n8n-main`.
-   - **Framework Preset**: `Vite` (auto-detected).
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-3. Add the environment variable:
-   - `VITE_API_BASE_URL` = `https://<YOUR-RAILWAY-URL>/api` *(Append `/api` at the end)*.
-4. Click **Deploy**.
-
----
-
-## 💻 Local Development Setup
+### Prerequisites
+- Python 3.11 or higher
+- Node.js 18 or higher with npm
+- Git
 
 ### Backend Setup
 
 ```bash
 cd backend
 
-# Create virtual environment (Python 3.11 recommended)
+# 1. Create and activate a Python virtual environment
 python -m venv .venv
 source .venv/bin/activate    # On Windows: .venv\Scripts\Activate.ps1
 
-# Install dependencies
+# 2. Install dependencies
 pip install -r requirements.txt
 
-# Run migrations
+# 3. Apply database migrations
 alembic upgrade head
 
-# Start development server
+# 4. Start the FastAPI development server
 uvicorn app.main:app --reload --port 8000
 ```
 
-API docs will be available at `http://localhost:8000/docs`.
+API documentation will be accessible at `http://localhost:8000/docs`.
 
 ### Frontend Setup
 
 ```bash
 cd AI-Health-Chatbot-n8n-main
 
-# Install dependencies
+# 1. Install dependencies
 npm install
 
-# Start Vite dev server
+# 2. Start the Vite development server
 npm run dev
 ```
 
-App will run at `http://localhost:8080`.
+The application will be accessible at `http://localhost:8080`.
 
 ---
 
-## 🛡️ License
+## Deployment Workflow
 
-This project is licensed under the **MIT License**.
-# HealthAIChatbot-LeadSphere
+### Backend Deployment (Railway)
+1. Push repository changes to GitHub.
+2. In Railway, configure the **Root Directory** as `/backend`.
+3. Populate all environment variables from `backend/.env.production`.
+4. Deploy the service and note the generated production URL.
+5. Verify health check at `https://<YOUR-RAILWAY-URL>/` (returns HTTP 200 `{"status": "ok"}`).
+
+### Frontend Deployment (Vercel)
+1. In Vercel, import the repository and set the **Root Directory** to `AI-Health-Chatbot-n8n-main`.
+2. Ensure framework preset is **Vite** with build command `npm run build` and output directory `dist`.
+3. Set environment variable `VITE_API_BASE_URL` to `https://<YOUR-RAILWAY-URL>/api`.
+4. Trigger production build and deployment.
+
+---
+
+## Clinical Safety & Disclaimer
+
+SevaSetu AI provides preliminary clinical guidance, automated welfare scheme matching, and verified first-aid instructions based on published medical literature. It is not a replacement for professional clinical judgment, emergency trauma diagnosis, or hospital treatment. In life-threatening emergencies (chest pain, acute breathing distress, severe trauma, or unconsciousness), individuals must immediately contact the National Emergency Ambulance Service at **108** or proceed to the nearest emergency room.
+
+---
+
+## License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for complete details.
