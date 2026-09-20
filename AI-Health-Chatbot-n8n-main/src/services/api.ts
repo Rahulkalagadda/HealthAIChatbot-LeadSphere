@@ -1,19 +1,23 @@
 import { toast } from "sonner";
 
-const getApiBaseUrl = (): string => {
+export const getApiBaseUrl = (): string => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
-  // Automatically route old railway subdomain to the active updated railway instance
-  if (envUrl && envUrl.includes("healthaichatbot-leadsphere-production.up.railway.app")) {
-    return "https://healthaichatbot-leadsphere-production-0990.up.railway.app/api";
+  // Automatically route legacy railway subdomains to the active updated railway instance
+  if (
+    envUrl &&
+    (envUrl.includes("healthaichatbot-leadsphere-production.up.railway.app") ||
+     envUrl.includes("healthaichatbot-leadsphere-production-0990.up.railway.app"))
+  ) {
+    return "https://healthaichatbot-leadsphere-production-2f83.up.railway.app/api";
   }
   if (envUrl) return envUrl;
   if (import.meta.env.PROD) {
-    return "https://healthaichatbot-leadsphere-production-0990.up.railway.app/api";
+    return "https://healthaichatbot-leadsphere-production-2f83.up.railway.app/api";
   }
   return "http://localhost:8000/api";
 };
 
-const API_BASE_URL = getApiBaseUrl();
+export const API_BASE_URL = getApiBaseUrl();
 
 export const chatService = {
   async sendMessage(message: string, userId: string = "user_123", language: string = "English") {

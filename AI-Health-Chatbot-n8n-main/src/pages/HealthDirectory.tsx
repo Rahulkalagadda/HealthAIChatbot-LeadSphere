@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Map, MapPin, Search, Phone, ArrowLeft, Stethoscope, Hospital, Ambulance, HeartPulse, Sparkles, Filter, ChevronRight, Loader2, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import { API_BASE_URL } from "../services/api";
 
 const HealthDirectory: React.FC = () => {
     const [filter, setFilter] = useState("all");
@@ -14,7 +15,7 @@ const HealthDirectory: React.FC = () => {
         if (!district || !stateName) return;
         setLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/directory?district=${district}&state=${stateName}`);
+            const response = await fetch(`${API_BASE_URL}/directory?district=${district}&state=${stateName}`);
             if (response.ok) {
                 const data = await response.json();
                 setFacilities(data);

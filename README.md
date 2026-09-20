@@ -150,7 +150,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 ```env
 # Production FastAPI Gateway URL
-VITE_API_BASE_URL="https://healthaichatbot-leadsphere-production-0990.up.railway.app/api"
+VITE_API_BASE_URL="https://healthaichatbot-leadsphere-production-2f83.up.railway.app/api"
 ```
 
 ---
